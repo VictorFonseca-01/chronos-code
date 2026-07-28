@@ -26,8 +26,16 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('javascript');
 
-  const getTranslatedInitialCode = () => {
-    return t(challenge.initialCodeKey) || (typeof challenge.initialCode === 'string' ? challenge.initialCode : challenge.initialCode.javascript || '');
+  const getTranslatedInitialCode = (lang: SupportedLanguage = selectedLanguage) => {
+    if (typeof challenge.initialCode === 'object' && challenge.initialCode[lang]) {
+      return challenge.initialCode[lang]!;
+    }
+    const translatedKey = `${challenge.initialCodeKey}_${lang}`;
+    const translated = t(translatedKey);
+    if (translated && translated !== translatedKey) {
+      return translated;
+    }
+    return t(challenge.initialCodeKey) || (typeof challenge.initialCode === 'string' ? challenge.initialCode : '');
   };
 
   const [code, setCode] = useState<string>(getTranslatedInitialCode());
@@ -47,9 +55,9 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Reset editor when challenge or language changes
+  // Reset editor when challenge, language or i18n locale changes
   useEffect(() => {
-    setCode(getTranslatedInitialCode());
+    setCode(getTranslatedInitialCode(selectedLanguage));
     setTestResults([]);
     setSandboxLogs([]);
     setHasRun(false);
@@ -57,10 +65,10 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     setActiveHintIndex(0);
     setSecondsElapsed(0);
     setActiveTab('editor');
-  }, [challenge.id, i18n.language]);
+  }, [challenge.id, selectedLanguage, i18n.language]);
 
   const handleResetCode = () => {
-    setCode(getTranslatedInitialCode());
+    setCode(getTranslatedInitialCode(selectedLanguage));
     setTestResults([]);
     setSandboxLogs([]);
     setHasRun(false);
@@ -94,6 +102,12 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
       }
     }, 400);
   };
+
+  const fileExtension = isFrontend
+    ? 'html'
+    : selectedLanguage === 'python'
+    ? 'py'
+    : 'js';
 
   const lines = code.split('\n');
 
@@ -173,6 +187,10 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                 <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
               </div>
 
+              <span className="ml-1 text-xs font-mono text-slate-400 font-bold">
+                chronos_editor.{fileExtension}
+              </span>
+
               {isFrontend ? (
                 /* Tabs: Editor vs Live Preview */
                 <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 font-mono text-xs">
@@ -209,7 +227,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                   <select
                     value={selectedLanguage}
                     onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
-                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500"
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
                   >
                     <option value="javascript">JavaScript ⚡</option>
                     <option value="python">Python 🐍</option>
