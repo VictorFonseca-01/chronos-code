@@ -79,6 +79,9 @@
   "challenge_be_01_hint1_python": "Usa 'REG_A = 10' y 'REG_B = 32'.",
   "challenge_be_01_hint1_java": "Usa 'int REG_A = 10;' y 'int REG_B = 32;'.",
   "challenge_be_01_hint2": "Calcula la suma de REG_A + REG_B y envíala a la salida.",
+  "challenge_be_01_code_javascript": "// SECTOR 1: MOTOR CUÁNTICO Y LÓGICA DE REGISTROS\n// Misión: Establece REG_A = 10, REG_B = 32 e imprime la suma de energía REG_A + REG_B\n\nlet REG_A = 0;\nlet REG_B = 0;\n\nconsole.log(REG_A + REG_B);",
+  "challenge_be_01_code_python": "# SECTOR 1: MOTOR CUÁNTICO Y LÓGICA DE REGISTROS\n# Misión: Establece REG_A = 10, REG_B = 32 e imprime la suma de energía REG_A + REG_B\n\nREG_A = 0\nREG_B = 0\n\nprint(REG_A + REG_B)",
+  "challenge_be_01_code_java": "// SECTOR 1: MOTOR CUÁNTICO Y LÓGICA DE REGISTROS\n// Misión: Establece REG_A = 10, REG_B = 32 e imprime la suma de energía con System.out.println\n\npublic class Main {\n    public static void main(String[] args) {\n        int REG_A = 0;\n        int REG_B = 0;\n        System.out.println(REG_A + REG_B);\n    }\n}",
   "test_be_01_tc1": "Instrucción de asignación REG_A = 10 válida",
   "test_be_01_tc2": "Instrucción de asignación REG_B = 32 válida",
   "test_be_01_tc3": "Operación de suma de energía ejecutada",
@@ -91,6 +94,8 @@
   "challenge_fe_01_hint2": "Inserta la etiqueta <a href='http://chronos.node'>Acessar Matriz</a> en el componente.",
   "challenge_fe_01_hint1_react": "Retorna JSX con <h1>Chronos Web node</h1>.",
   "challenge_fe_01_hint2_react": "Retorna JSX con <a href='http://chronos.node'>Acessar Matriz</a>.",
+  "challenge_fe_01_code_html": "<!-- SECTOR 1: REINICIALIZACIÓN DEL VISOR HOLO -->\n<header>\n  <!-- Agrega el título h1 con el mensaje: Chronos Web node -->\n</header>\n\n<main>\n  <p>Conexión con la Matriz establecida.</p>\n  <!-- Agrega el enlace <a> para \"http://chronos.node\" con el texto \"Acessar Matriz\" -->\n</main>",
+  "challenge_fe_01_code_react": "// SECTOR 1: COMPONENTE REACT (JSX)\nexport default function ChronosWebNode() {\n  return (\n    <header>\n      {/* Agrega el título h1 con el mensaje: Chronos Web node */}\n      \n      {/* Agrega el enlace <a> para \"http://chronos.node\" con el texto \"Acessar Matriz\" */}\n    </header>\n  );\n}",
   "test_fe_01_tc1": "Título <h1>Chronos Web node</h1> presente",
   "test_fe_01_tc2": "Enlace <a> hacia http://chronos.node configurado",
 
@@ -102,12 +107,16 @@
   "challenge_be_02_hint1_javascript": "Reemplaza 'return 0;' por 'return cycles * flux_multiplier;'.",
   "challenge_be_02_hint1_python": "Usa sangría de 4 espacios en Python y retorna 'return cycles * flux_multiplier'.",
   "challenge_be_02_hint1_java": "En Java retorna 'return cycles * fluxMultiplier;'.",
+  "challenge_be_02_code_javascript": "// SECTOR 2: ALGORITMOS EN JAVASCRIPT\n// Misión: Completa la función retornando la multiplicación de nano-drones: cycles * flux_multiplier.\n\nfunction calcular_frequencia(cycles, flux_multiplier) {\n    // Retorna el producto de parámetros abajo\n    return 0;\n}",
+  "challenge_be_02_code_python": "# SECTOR 2: ALGORITMOS EN PYTHON\n# Misión: Completa la función retornando la multiplicación de nano-drones: cycles * flux_multiplier.\n\ndef calcular_frequencia(cycles, flux_multiplier):\n    # Retorna el producto de parámetros abajo\n    return 0",
+  "challenge_be_02_code_java": "// SECTOR 2: ALGORITMOS EN JAVA\npublic class FrequencyCalculator {\n    public static int calcularFrequencia(int cycles, int fluxMultiplier) {\n        // Retorna el producto de parámetros abajo\n        return 0;\n    }\n}",
   "test_be_02_tc1": "Retorno de frecuencia de nano-drones configurado correctamente",
 
   "challenge_fe_02_title": "Estilo del Visor Cyberpunk",
   "challenge_fe_02_desc": "Define background-color en #0f172a, display flex y justify-content center.",
   "challenge_fe_02_context": "Sintoniza las señales visuales del visor holográfico aplicando color de fondo cibernético #0f172a y centralización flexbox.",
   "challenge_fe_02_hint1": "Inserta background-color: #0f172a; display: flex; justify-content: center; en .temporal-container.",
+  "challenge_fe_02_code": "/* SECTOR 2: HOJA DE ESTILOS HOLOGRÁFICA */\n.temporal-container {\n  /* Establece background-color en #0f172a */\n  \n  /* Establece display en flex */\n  \n  /* Establece justify-content en center */\n}",
   "test_fe_02_tc1": "Atributo background-color #0f172a configurado",
   "test_fe_02_tc2": "Propiedades flexbox de centralización configuradas"
 }

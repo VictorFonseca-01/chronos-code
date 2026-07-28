@@ -43,15 +43,19 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   };
 
   const getTranslatedInitialCode = (lang: SupportedLanguage = selectedLanguage) => {
+    const langKey = `${challenge.initialCodeKey}_${lang}`;
+    const translatedLangKey = t(langKey);
+    if (translatedLangKey && translatedLangKey !== langKey) {
+      return translatedLangKey;
+    }
+    const defaultTranslated = t(challenge.initialCodeKey);
+    if (defaultTranslated && defaultTranslated !== challenge.initialCodeKey) {
+      return defaultTranslated;
+    }
     if (typeof challenge.initialCode === 'object' && (challenge.initialCode as MultiLanguageMap<string>)[lang]) {
       return (challenge.initialCode as MultiLanguageMap<string>)[lang]!;
     }
-    const translatedKey = `${challenge.initialCodeKey}_${lang}`;
-    const translated = t(translatedKey);
-    if (translated && translated !== translatedKey) {
-      return translated;
-    }
-    return t(challenge.initialCodeKey) || (typeof challenge.initialCode === 'string' ? challenge.initialCode : '');
+    return typeof challenge.initialCode === 'string' ? challenge.initialCode : '';
   };
 
   const getActiveHints = (): string[] => {

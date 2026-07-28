@@ -79,6 +79,9 @@
   "challenge_be_01_hint1_python": "Use 'REG_A = 10' and 'REG_B = 32'.",
   "challenge_be_01_hint1_java": "Use 'int REG_A = 10;' and 'int REG_B = 32;'.",
   "challenge_be_01_hint2": "Calculate the sum REG_A + REG_B and send it to stdout.",
+  "challenge_be_01_code_javascript": "// SECTOR 1: QUANTUM ENGINE & REGISTER LOGIC\n// Mission: Set REG_A = 10, REG_B = 32 and print energy sum of REG_A + REG_B\n\nlet REG_A = 0;\nlet REG_B = 0;\n\nconsole.log(REG_A + REG_B);",
+  "challenge_be_01_code_python": "# SECTOR 1: QUANTUM ENGINE & REGISTER LOGIC\n# Mission: Set REG_A = 10, REG_B = 32 and print energy sum of REG_A + REG_B\n\nREG_A = 0\nREG_B = 0\n\nprint(REG_A + REG_B)",
+  "challenge_be_01_code_java": "// SECTOR 1: QUANTUM ENGINE & REGISTER LOGIC\n// Mission: Set REG_A = 10, REG_B = 32 and print energy sum with System.out.println\n\npublic class Main {\n    public static void main(String[] args) {\n        int REG_A = 0;\n        int REG_B = 0;\n        System.out.println(REG_A + REG_B);\n    }\n}",
   "test_be_01_tc1": "Valid assignment for REG_A = 10",
   "test_be_01_tc2": "Valid assignment for REG_B = 32",
   "test_be_01_tc3": "Energy addition operation executed",
@@ -91,6 +94,8 @@
   "challenge_fe_01_hint2": "Insert <a href='http://chronos.node'>Acessar Matriz</a> into the component.",
   "challenge_fe_01_hint1_react": "Return JSX containing <h1>Chronos Web node</h1>.",
   "challenge_fe_01_hint2_react": "Return JSX containing <a href='http://chronos.node'>Acessar Matriz</a>.",
+  "challenge_fe_01_code_html": "<!-- SECTOR 1: HOLO VISOR REBOOT -->\n<header>\n  <!-- Add the h1 heading with message: Chronos Web node -->\n</header>\n\n<main>\n  <p>Matrix Connection established.</p>\n  <!-- Add <a> link for \"http://chronos.node\" with text \"Acessar Matriz\" -->\n</main>",
+  "challenge_fe_01_code_react": "// SECTOR 1: REACT COMPONENT (JSX)\nexport default function ChronosWebNode() {\n  return (\n    <header>\n      {/* Add the h1 heading with message: Chronos Web node */}\n      \n      {/* Add <a> link for \"http://chronos.node\" with text \"Acessar Matriz\" */}\n    </header>\n  );\n}",
   "test_fe_01_tc1": "Heading <h1>Chronos Web node</h1> present",
   "test_fe_01_tc2": "Link <a> to http://chronos.node configured",
 
@@ -102,12 +107,16 @@
   "challenge_be_02_hint1_javascript": "Replace 'return 0;' with 'return cycles * flux_multiplier;'.",
   "challenge_be_02_hint1_python": "Use 4-space indentation in Python and return 'return cycles * flux_multiplier'.",
   "challenge_be_02_hint1_java": "In Java return 'return cycles * fluxMultiplier;'.",
+  "challenge_be_02_code_javascript": "// SECTOR 2: JAVASCRIPT ALGORITHMS\n// Mission: Complete the function returning the nano-drone multiplication: cycles * flux_multiplier.\n\nfunction calcular_frequencia(cycles, flux_multiplier) {\n    // Return the parameter product below\n    return 0;\n}",
+  "challenge_be_02_code_python": "# SECTOR 2: PYTHON ALGORITHMS\n# Mission: Complete the function returning the nano-drone multiplication: cycles * flux_multiplier.\n\ndef calcular_frequencia(cycles, flux_multiplier):\n    # Return the parameter product below\n    return 0",
+  "challenge_be_02_code_java": "// SECTOR 2: JAVA ALGORITHMS\npublic class FrequencyCalculator {\n    public static int calcularFrequencia(int cycles, int fluxMultiplier) {\n        // Return the parameter product below\n        return 0;\n    }\n}",
   "test_be_02_tc1": "Nano-drone frequency returned correctly",
 
   "challenge_fe_02_title": "Cyberpunk Visor Styling",
   "challenge_fe_02_desc": "Set background-color to #0f172a, display flex and justify-content center.",
   "challenge_fe_02_context": "Tune the holographic visor visual beacons applying cybernetic background-color #0f172a and flexbox centering.",
   "challenge_fe_02_hint1": "Insert background-color: #0f172a; display: flex; justify-content: center; into class .temporal-container.",
+  "challenge_fe_02_code": "/* SECTOR 2: HOLOGRAPHIC STYLESHEET */\n.temporal-container {\n  /* Set background-color to #0f172a */\n  \n  /* Set display to flex */\n  \n  /* Set justify-content to center */\n}",
   "test_fe_02_tc1": "Attribute background-color #0f172a set",
   "test_fe_02_tc2": "Flexbox centering properties set"
 }
