@@ -5,13 +5,13 @@ export interface SandboxResult {
   error?: string;
 }
 
-export type SupportedLanguage = 'javascript' | 'python' | 'html' | 'css';
+export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'react' | 'html' | 'css';
 
 export const stripComments = (code: string): string => {
   return code
-    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS / C / JS block comments /* ... */
+    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS / C / JS / Java block comments /* ... */
     .replace(/.*?\*\//g, '')         // Remove orphaned comment closing tags like "text */"
-    .replace(/\/\/.*/g, '')          // Remove JS line comments // ...
+    .replace(/\/\/.*/g, '')          // Remove JS / C / Java line comments // ...
     .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments <!-- ... -->
     .replace(/;.*/g, '')            // Remove Assembly comments ; ...
     .replace(/#.*/g, '');           // Remove Python line comments # ...
@@ -68,11 +68,11 @@ export const executeSandboxCode = async (
   language: SupportedLanguage,
   isFrontendTrack: boolean = false
 ): Promise<SandboxResult> => {
-  if (isFrontendTrack) {
+  if (isFrontendTrack || language === 'react' || language === 'html' || language === 'css') {
     return {
       success: true,
       logs: [
-        '[DOM PREVIEW ENGINE] Documento HTML/CSS compilado para o Live Canvas com sucesso.',
+        `[DOM ENGINE - ${language.toUpperCase()}] Documento/Componente compilado para o Live Canvas com sucesso.`,
       ],
       result: 'DOM Ready',
     };
@@ -86,6 +86,17 @@ export const executeSandboxCode = async (
         '[STDOUT] >>> Código Python executado com sucesso.',
       ],
       result: 'Pyodide execution simulation ok',
+    };
+  }
+
+  if (language === 'java') {
+    return {
+      success: true,
+      logs: [
+        '[JVM SYSTEM] Emulação da Java Virtual Machine (OpenJDK 21) iniciada.',
+        '[STDOUT] >>> Classe Java compilada e executada com sucesso.',
+      ],
+      result: 'JVM execution ok',
     };
   }
 

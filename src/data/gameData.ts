@@ -13,54 +13,76 @@ export const ERAS_DATA: Era[] = [
         eraId: 'era_01',
         track: 'backend',
         titleKey: 'challenge_be_01_title',
-        descriptionKey: 'challenge_be_01_desc',
+        descriptionKey: {
+          javascript: 'challenge_be_01_desc_javascript',
+          python: 'challenge_be_01_desc_python',
+          java: 'challenge_be_01_desc_java',
+        },
         contextKey: 'challenge_be_01_context',
         initialCodeKey: 'challenge_be_01_code',
         initialCode: {
-          javascript: `// ERA 1: CARTÃO PERFURADO & LOGICA DE REGISTRADOR
+          javascript: `// ERA 1: CARTÃO PERFURADO & LOGICA EM JAVASCRIPT
 // Missão: Defina REG_A = 10, REG_B = 32 e exiba a soma de REG_A + REG_B
 
 let REG_A = 0;
 let REG_B = 0;
 
 console.log(REG_A + REG_B);`,
-          python: `# ERA 1: CARTÃO PERFURADO & LOGICA DE REGISTRADOR
+          python: `# ERA 1: CARTÃO PERFURADO & LOGICA EM PYTHON
 # Missão: Defina REG_A = 10, REG_B = 32 e imprima a soma de REG_A + REG_B
 
 REG_A = 0
 REG_B = 0
 
 print(REG_A + REG_B)`,
+          java: `// ERA 1: CARTÃO PERFURADO & LOGICA EM JAVA
+// Missão: Defina REG_A = 10, REG_B = 32 e exiba a soma com System.out.println
+
+public class Main {
+    public static void main(String[] args) {
+        int REG_A = 0;
+        int REG_B = 0;
+        System.out.println(REG_A + REG_B);
+    }
+}`,
         },
-        hintsKeys: ['challenge_be_01_hint1', 'challenge_be_01_hint2'],
+        hintsKeys: {
+          javascript: ['challenge_be_01_hint1_javascript', 'challenge_be_01_hint2'],
+          python: ['challenge_be_01_hint1_python', 'challenge_be_01_hint2'],
+          java: ['challenge_be_01_hint1_java', 'challenge_be_01_hint2'],
+        },
         xpReward: 150,
-        testCases: [
-          {
-            id: 'check_reg_a',
-            descriptionKey: 'test_be_01_tc1',
-            testFn: (code: string) => /REG_A\s*=\s*10/i.test(code),
-          },
-          {
-            id: 'check_reg_b',
-            descriptionKey: 'test_be_01_tc2',
-            testFn: (code: string) => /REG_B\s*=\s*32/i.test(code),
-          },
-          {
-            id: 'check_add',
-            descriptionKey: 'test_be_01_tc3',
-            testFn: (code: string) => /(REG_A\s*\+\s*REG_B|console\.log|print)/i.test(code),
-          },
-        ],
+        testCases: {
+          javascript: [
+            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /REG_A\s*=\s*10/i.test(code) },
+            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /REG_B\s*=\s*32/i.test(code) },
+            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(REG_A\s*\+\s*REG_B|console\.log)/i.test(code) },
+          ],
+          python: [
+            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /REG_A\s*=\s*10/i.test(code) },
+            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /REG_B\s*=\s*32/i.test(code) },
+            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(REG_A\s*\+\s*REG_B|print)/i.test(code) },
+          ],
+          java: [
+            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(int\s+)?REG_A\s*=\s*10/i.test(code) },
+            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(int\s+)?REG_B\s*=\s*32/i.test(code) },
+            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /System\.out\.println/i.test(code) },
+          ],
+        },
       },
       {
         id: 'frontend_01',
         eraId: 'era_01',
         track: 'frontend',
         titleKey: 'challenge_fe_01_title',
-        descriptionKey: 'challenge_fe_01_desc',
+        descriptionKey: {
+          html: 'challenge_fe_01_desc',
+          react: 'challenge_fe_01_desc_react',
+        },
         contextKey: 'challenge_fe_01_context',
         initialCodeKey: 'challenge_fe_01_code',
-        initialCode: `<!-- ERA 1: O PRIMEIRO DOCUMENTO HYPERTEXTO (CERN 1991) -->
+        initialCode: {
+          html: `<!-- ERA 1: O PRIMEIRO DOCUMENTO HYPERTEXTO (CERN 1991) -->
 <header>
   <!-- Adicione o titulo h1 com a mensagem: Chronos Web node -->
 </header>
@@ -69,20 +91,32 @@ print(REG_A + REG_B)`,
   <p>Conexão estabelecida.</p>
   <!-- Adicione a tag <a> para "http://chronos.node" com o texto "Acessar Matriz" -->
 </main>`,
-        hintsKeys: ['challenge_fe_01_hint1', 'challenge_fe_01_hint2'],
+          react: `// ERA 1: COMPONENTES EM REACT (JSX)
+export default function ChronosWebNode() {
+  return (
+    <header>
+      {/* Adicione o titulo h1 com a mensagem: Chronos Web node */}
+      
+      {/* Adicione a tag <a> para "http://chronos.node" com o texto "Acessar Matriz" */}
+    </header>
+  );
+}`,
+        },
+        hintsKeys: {
+          html: ['challenge_fe_01_hint1', 'challenge_fe_01_hint2'],
+          react: ['challenge_fe_01_hint1_react', 'challenge_fe_01_hint2_react'],
+        },
         xpReward: 150,
-        testCases: [
-          {
-            id: 'check_h1',
-            descriptionKey: 'test_fe_01_tc1',
-            testFn: (code: string) => /<h1>\s*Chronos Web node\s*<\/h1>/i.test(code),
-          },
-          {
-            id: 'check_link',
-            descriptionKey: 'test_fe_01_tc2',
-            testFn: (code: string) => /<a\s+href=["']http:\/\/chronos\.node["']>\s*Acessar Matriz\s*<\/a>/i.test(code),
-          },
-        ],
+        testCases: {
+          html: [
+            { id: 'check_h1', descriptionKey: 'test_fe_01_tc1', testFn: (code: string) => /<h1>\s*Chronos Web node\s*<\/h1>/i.test(code) },
+            { id: 'check_link', descriptionKey: 'test_fe_01_tc2', testFn: (code: string) => /<a\s+href=["']http:\/\/chronos\.node["']>\s*Acessar Matriz\s*<\/a>/i.test(code) },
+          ],
+          react: [
+            { id: 'check_h1', descriptionKey: 'test_fe_01_tc1', testFn: (code: string) => /<h1>\s*Chronos Web node\s*<\/h1>/i.test(code) },
+            { id: 'check_link', descriptionKey: 'test_fe_01_tc2', testFn: (code: string) => /<a\s+href=["']http:\/\/chronos\.node["']>\s*Acessar Matriz\s*<\/a>/i.test(code) },
+          ],
+        },
       },
     ],
   },
@@ -98,7 +132,11 @@ print(REG_A + REG_B)`,
         eraId: 'era_02',
         track: 'backend',
         titleKey: 'challenge_be_02_title',
-        descriptionKey: 'challenge_be_02_desc',
+        descriptionKey: {
+          javascript: 'challenge_be_02_desc_javascript',
+          python: 'challenge_be_02_desc_python',
+          java: 'challenge_be_02_desc_java',
+        },
         contextKey: 'challenge_be_02_context',
         initialCodeKey: 'challenge_be_02_code',
         initialCode: {
@@ -115,16 +153,31 @@ function calcular_frequencia(cycles, flux_multiplier) {
 def calcular_frequencia(cycles, flux_multiplier):
     # Retorne a multiplicação dos parâmetros abaixo
     return 0`,
+          java: `// ERA 2: ALGORITMOS EM JAVA
+public class FrequencyCalculator {
+    public static int calcularFrequencia(int cycles, int fluxMultiplier) {
+        // Retorne a multiplicação de cycles por fluxMultiplier
+        return 0;
+    }
+}`,
         },
-        hintsKeys: ['challenge_be_02_hint1'],
+        hintsKeys: {
+          javascript: ['challenge_be_02_hint1_javascript'],
+          python: ['challenge_be_02_hint1_python'],
+          java: ['challenge_be_02_hint1_java'],
+        },
         xpReward: 250,
-        testCases: [
-          {
-            id: 'check_return_product',
-            descriptionKey: 'test_be_02_tc1',
-            testFn: (code: string) => /return\s+cycles\s*\*\s*flux_multiplier/i.test(code),
-          },
-        ],
+        testCases: {
+          javascript: [
+            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*flux_multiplier/i.test(code) },
+          ],
+          python: [
+            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*flux_multiplier/i.test(code) },
+          ],
+          java: [
+            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*fluxMultiplier/i.test(code) },
+          ],
+        },
       },
       {
         id: 'frontend_02',
@@ -145,16 +198,8 @@ def calcular_frequencia(cycles, flux_multiplier):
         hintsKeys: ['challenge_fe_02_hint1'],
         xpReward: 250,
         testCases: [
-          {
-            id: 'check_bg_color',
-            descriptionKey: 'test_fe_02_tc1',
-            testFn: (code: string) => /background-color:\s*#0f172a/i.test(code),
-          },
-          {
-            id: 'check_flex_center',
-            descriptionKey: 'test_fe_02_tc2',
-            testFn: (code: string) => /display:\s*flex/i.test(code) && /justify-content:\s*center/i.test(code),
-          },
+          { id: 'check_bg_color', descriptionKey: 'test_fe_02_tc1', testFn: (code: string) => /background-color:\s*#0f172a/i.test(code) },
+          { id: 'check_flex_center', descriptionKey: 'test_fe_02_tc2', testFn: (code: string) => /display:\s*flex/i.test(code) && /justify-content:\s*center/i.test(code) },
         ],
       },
     ],

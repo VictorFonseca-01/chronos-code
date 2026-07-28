@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, RotateCcw, HelpCircle, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles, Code2, Eye } from 'lucide-react';
-import { Challenge, TestCase } from '../../types/game';
+import { Challenge, TestCase, MultiLanguageMap } from '../../types/game';
 import { executeSandboxCode, SupportedLanguage, SandboxResult, stripComments } from '../../utils/codeSandbox';
 import { LivePreviewCanvas } from './LivePreviewCanvas';
 
@@ -24,11 +24,27 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   const isFrontend = challenge.track === 'frontend';
 
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('javascript');
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(
+    isFrontend ? 'html' : 'javascript'
+  );
+
+  // Set default language when challenge changes
+  useEffect(() => {
+    setSelectedLanguage(isFrontend ? 'html' : 'javascript');
+  }, [challenge.id, isFrontend]);
+
+  // Dynamic language resolution helpers
+  const getTranslatedDescription = () => {
+    if (typeof challenge.descriptionKey === 'object' && challenge.descriptionKey[selectedLanguage]) {
+      const key = challenge.descriptionKey[selectedLanguage]!;
+      return t(key);
+    }
+    return t(challenge.descriptionKey as string);
+  };
 
   const getTranslatedInitialCode = (lang: SupportedLanguage = selectedLanguage) => {
-    if (typeof challenge.initialCode === 'object' && challenge.initialCode[lang]) {
-      return challenge.initialCode[lang]!;
+    if (typeof challenge.initialCode === 'object' && (challenge.initialCode as MultiLanguageMap<string>)[lang]) {
+      return (challenge.initialCode as MultiLanguageMap<string>)[lang]!;
     }
     const translatedKey = `${challenge.initialCodeKey}_${lang}`;
     const translated = t(translatedKey);
@@ -38,7 +54,21 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     return t(challenge.initialCodeKey) || (typeof challenge.initialCode === 'string' ? challenge.initialCode : '');
   };
 
-  const [code, setCode] = useState<string>(getTranslatedInitialCode());
+  const getActiveHints = (): string[] => {
+    if (typeof challenge.hintsKeys === 'object' && !Array.isArray(challenge.hintsKeys) && (challenge.hintsKeys as MultiLanguageMap<string[]>)[selectedLanguage]) {
+      return (challenge.hintsKeys as MultiLanguageMap<string[]>)[selectedLanguage]!;
+    }
+    return Array.isArray(challenge.hintsKeys) ? challenge.hintsKeys : [];
+  };
+
+  const getActiveTestCases = (): TestCase[] => {
+    if (typeof challenge.testCases === 'object' && !Array.isArray(challenge.testCases) && (challenge.testCases as MultiLanguageMap<TestCase[]>)[selectedLanguage]) {
+      return (challenge.testCases as MultiLanguageMap<TestCase[]>)[selectedLanguage]!;
+    }
+    return Array.isArray(challenge.testCases) ? challenge.testCases : [];
+  };
+
+  const [code, setCode] = useState<string>(getTranslatedInitialCode(selectedLanguage));
   const [showHint, setShowHint] = useState<boolean>(false);
   const [activeHintIndex, setActiveHintIndex] = useState<number>(0);
   const [testResults, setTestResults] = useState<TestRunResult[]>([]);
@@ -94,8 +124,10 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     }
     setSandboxLogs(logs);
 
+    const currentTestCases = getActiveTestCases();
+
     setTimeout(() => {
-      const results: TestRunResult[] = challenge.testCases.map((tc: TestCase) => ({
+      const results: TestRunResult[] = currentTestCases.map((tc: TestCase) => ({
         testId: tc.id,
         passed: !isUnchanged && tc.testFn(cleanCode),
         descriptionKey: tc.descriptionKey,
@@ -111,12 +143,18 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     }, 400);
   };
 
-  const fileExtension = isFrontend
-    ? 'html'
-    : selectedLanguage === 'python'
-    ? 'py'
-    : 'js';
+  const getFileExtension = () => {
+    switch (selectedLanguage) {
+      case 'python': return 'py';
+      case 'java': return 'java';
+      case 'react': return 'jsx';
+      case 'css': return 'css';
+      case 'html': return 'html';
+      default: return 'js';
+    }
+  };
 
+  const activeHints = getActiveHints();
   const lines = code.split('\n');
 
   return (
@@ -134,7 +172,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
           </div>
 
           <p className="text-slate-300 text-sm leading-relaxed font-light">
-            {t(challenge.descriptionKey)}
+            {getTranslatedDescription()}
           </p>
 
           {/* Context box */}
@@ -143,7 +181,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               [CHRONO BRIEFING]
             </span>
             <p className="text-slate-300">
-              {t(challenge.contextKey)}
+              {t(challenge.contextKey as string)}
             </p>
           </div>
 
@@ -157,17 +195,17 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               <span>{showHint ? t('hide_hint') : t('show_hint')}</span>
             </button>
 
-            {showHint && challenge.hintsKeys.length > 0 && (
+            {showHint && activeHints.length > 0 && (
               <div className="mt-3 p-4 rounded-xl bg-purple-950/30 border border-purple-800/40 text-xs font-mono text-purple-200 space-y-2">
                 <p className="text-purple-300 font-semibold">
                   💡 {t('hint_label')} #{activeHintIndex + 1}:
                 </p>
-                <p>{t(challenge.hintsKeys[activeHintIndex])}</p>
-                {challenge.hintsKeys.length > 1 && (
+                <p>{t(activeHints[activeHintIndex])}</p>
+                {activeHints.length > 1 && (
                   <div className="flex justify-end gap-2 pt-2">
                     <button
                       onClick={() =>
-                        setActiveHintIndex((prev) => (prev + 1) % challenge.hintsKeys.length)
+                        setActiveHintIndex((prev) => (prev + 1) % activeHints.length)
                       }
                       className="px-2 py-1 rounded bg-purple-900/50 hover:bg-purple-800 text-[10px] text-purple-200"
                     >
@@ -196,12 +234,37 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               </div>
 
               <span className="ml-1 text-xs font-mono text-slate-400 font-bold">
-                chronos_editor.{fileExtension}
+                chronos_editor.{getFileExtension()}
               </span>
 
-              {isFrontend ? (
+              {/* Language Selector Dropdown */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-slate-400 font-bold uppercase">
+                  {t('language_label')}:
+                </span>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
+                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
+                >
+                  {isFrontend ? (
+                    <>
+                      <option value="html">HTML 🌐</option>
+                      <option value="react">React (JSX) ⚛️</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="javascript">JavaScript ⚡</option>
+                      <option value="python">Python 🐍</option>
+                      <option value="java">Java ☕</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              {isFrontend && (
                 /* Tabs: Editor vs Live Preview */
-                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 font-mono text-xs">
+                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 font-mono text-xs ml-auto sm:ml-0">
                   <button
                     onClick={() => setActiveTab('editor')}
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
@@ -225,21 +288,6 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                     <Eye className="w-3.5 h-3.5" />
                     <span>{t('tab_live_preview')}</span>
                   </button>
-                </div>
-              ) : (
-                /* Language selector for Backend */
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-slate-400 font-bold uppercase">
-                    {t('language_label')}:
-                  </span>
-                  <select
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
-                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
-                  >
-                    <option value="javascript">JavaScript ⚡</option>
-                    <option value="python">Python 🐍</option>
-                  </select>
                 </div>
               )}
             </div>

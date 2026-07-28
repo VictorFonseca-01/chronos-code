@@ -10,20 +10,20 @@ export interface TestCase {
   testFn: (code: string) => boolean;
 }
 
-export type MultiLanguageCodeMap = Record<SupportedLanguage, string>;
+export type MultiLanguageMap<T> = Partial<Record<SupportedLanguage, T>>;
 
 export interface Challenge {
   id: string;
   eraId: EraId;
   track: TrackType;
   titleKey: string;
-  descriptionKey: string;
-  contextKey: string;
+  descriptionKey: string | MultiLanguageMap<string>;
+  contextKey: string | MultiLanguageMap<string>;
   initialCodeKey: string;
-  initialCode: string | Partial<MultiLanguageCodeMap>;
-  hintsKeys: string[];
+  initialCode: string | MultiLanguageMap<string>;
+  hintsKeys: string[] | MultiLanguageMap<string[]>;
   xpReward: number;
-  testCases: TestCase[];
+  testCases: TestCase[] | MultiLanguageMap<TestCase[]>;
 }
 
 export interface Era {
