@@ -16,7 +16,7 @@ const LANGUAGES: LanguageOption[] = [
 ];
 
 export const LanguageSelector: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +53,7 @@ export const LanguageSelector: React.FC = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-slate-900/95 border border-slate-700/80 shadow-2xl backdrop-blur-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800/80 mb-1">
-            Selecione o Idioma
+            {t('select_language_heading')}
           </div>
           {LANGUAGES.map((lang) => {
             const isSelected = i18n.language === lang.code;

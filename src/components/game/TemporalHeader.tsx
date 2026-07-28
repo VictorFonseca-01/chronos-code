@@ -38,10 +38,10 @@ export const TemporalHeader: React.FC<TemporalHeaderProps> = ({
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all text-xs font-medium"
-            title={t('back_to_home')}
+            title={t('abort_mission')}
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('back_to_home')}</span>
+            <span className="hidden sm:inline">{t('abort_mission')}</span>
           </button>
 
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800">
@@ -55,7 +55,7 @@ export const TemporalHeader: React.FC<TemporalHeaderProps> = ({
 
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono">
             <Globe className="w-3.5 h-3.5 animate-spin-slow" />
-            <span>ERA: {yearRange}</span>
+            <span>{t('era_label')}: {yearRange}</span>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export const TemporalHeader: React.FC<TemporalHeaderProps> = ({
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:text-white hover:bg-purple-500/20 transition-all text-xs font-mono font-semibold"
           >
             <Trophy className="w-4 h-4 text-purple-400" />
-            <span className="hidden sm:inline">Ranking</span>
+            <span className="hidden sm:inline">{t('ranking')}</span>
           </button>
 
           {/* Progress Bar */}

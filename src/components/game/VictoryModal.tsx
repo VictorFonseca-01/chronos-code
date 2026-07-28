@@ -31,17 +31,18 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         {/* Title */}
         <div className="space-y-2 relative">
           <h2 className="text-3xl font-extrabold text-white tracking-tight">
-            Salto Temporal Concluído!
+            {t('level_complete')}
           </h2>
           <p className="text-slate-400 text-sm">
-            Você dominou o desafio <span className="text-emerald-400 font-semibold">{t(challenge.titleKey)}</span>.
+            {t('challenge_completed_intro')}{' '}
+            <span className="text-emerald-400 font-semibold">{t(challenge.titleKey)}</span>.
           </p>
         </div>
 
         {/* Rewards Summary Box */}
         <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-left font-mono text-xs">
           <div className="space-y-1">
-            <span className="text-slate-500 block uppercase tracking-wider">XP Ganho</span>
+            <span className="text-slate-500 block uppercase tracking-wider">{t('xp_gained')}</span>
             <div className="flex items-center gap-1.5 text-amber-400 font-bold text-base">
               <Zap className="w-4 h-4 fill-amber-400" />
               <span>+{challenge.xpReward} XP</span>
@@ -49,7 +50,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <span className="text-slate-500 block uppercase tracking-wider">Tempo Decorrido</span>
+            <span className="text-slate-500 block uppercase tracking-wider">{t('completion_time')}</span>
             <div className="flex items-center gap-1.5 text-blue-400 font-bold text-base">
               <Sparkles className="w-4 h-4" />
               <span>{timeSeconds}s</span>
@@ -63,7 +64,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl gradient-cyber text-white font-bold text-base shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:brightness-110 active:scale-95 transition-all cursor-pointer"
         >
           <Rocket className="w-5 h-5 animate-pulse" />
-          <span>Avançar para Próxima Era</span>
+          <span>{t('next_challenge')}</span>
           <ArrowRight className="w-5 h-5" />
         </button>
       </div>

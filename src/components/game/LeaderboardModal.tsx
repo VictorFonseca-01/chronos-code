@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Trophy, X, Zap, Cpu, Layout, RefreshCw } from 'lucide-react';
 import { fetchTopLeaderboard } from '../../services/gameService';
 import { LeaderboardEntry } from '../../types/game';
@@ -8,6 +9,7 @@ interface LeaderboardModalProps {
 }
 
 export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
+  const { t } = useTranslation();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -33,10 +35,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) =
             </div>
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">
-                Ranking Temporal Global
+                {t('leaderboard_title')}
               </h2>
               <p className="text-xs text-slate-400 font-mono">
-                Top codificadores das fendas temporais (Supabase Core)
+                {t('leaderboard_subtitle')}
               </p>
             </div>
           </div>
@@ -54,13 +56,13 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) =
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-3 text-slate-400 text-xs font-mono">
               <RefreshCw className="w-6 h-6 animate-spin text-purple-400" />
-              <span>Sincronizando com Supabase...</span>
+              <span>{t('leaderboard_loading')}</span>
             </div>
           ) : entries.length === 0 ? (
             <div className="text-center py-12 space-y-2 text-slate-500 text-xs font-mono">
               <Trophy className="w-8 h-8 mx-auto text-slate-700" />
-              <p>Nenhuma pontuação registrada ainda no ranking.</p>
-              <p className="text-slate-600 text-[11px]">Seja o primeiro a completar um desafio!</p>
+              <p>{t('leaderboard_empty')}</p>
+              <p className="text-slate-600 text-[11px]">{t('leaderboard_empty_sub')}</p>
             </div>
           ) : (
             entries.map((item, idx) => (
@@ -114,13 +116,13 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) =
 
         {/* Footer info */}
         <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-500">
-          <span>Ranking em tempo real</span>
+          <span>{t('realtime_ranking')}</span>
           <button
             onClick={loadLeaderboard}
             className="flex items-center gap-1 text-purple-400 hover:text-purple-300"
           >
             <RefreshCw className="w-3 h-3" />
-            <span>Atualizar</span>
+            <span>{t('refresh')}</span>
           </button>
         </div>
       </div>

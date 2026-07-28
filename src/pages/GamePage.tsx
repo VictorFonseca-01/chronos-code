@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { ERAS_DATA } from '../data/gameData';
 import { TrackType, EraId, Challenge } from '../types/game';
@@ -11,6 +12,7 @@ import { Navbar } from '../components/Navbar';
 import { Terminal, ChevronRight, Lock } from 'lucide-react';
 
 export const GamePage: React.FC = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const trackParam = (searchParams.get('track') as TrackType) || 'backend';
 
@@ -132,7 +134,7 @@ export const GamePage: React.FC = () => {
                     : 'bg-slate-950/40 border-slate-900 text-slate-600 cursor-not-allowed'
                 }`}
               >
-                <span>ERA 0{idx + 1} ({era.yearRange})</span>
+                <span>{t('era_label')} 0{idx + 1} ({era.yearRange})</span>
                 {!isUnlocked && <Lock className="w-3.5 h-3.5 text-slate-600" />}
                 {idx < ERAS_DATA.length - 1 && (
                   <ChevronRight className="w-3.5 h-3.5 text-slate-700 ml-1" />
@@ -153,7 +155,7 @@ export const GamePage: React.FC = () => {
           <div className="text-center py-16 space-y-4">
             <Terminal className="w-12 h-12 text-slate-600 mx-auto" />
             <p className="text-slate-400 font-mono text-sm">
-              Nenhum desafio encontrado para esta trilha nesta era.
+              {t('no_challenges_found')}
             </p>
           </div>
         )}

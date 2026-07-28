@@ -109,13 +109,13 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               className="flex items-center gap-2 text-xs font-mono text-purple-400 hover:text-purple-300 transition-colors"
             >
               <HelpCircle className="w-4 h-4" />
-              <span>{showHint ? 'Ocultar Dica Temporal' : 'Precisa de Ajuda? Ver Dica'}</span>
+              <span>{showHint ? t('hide_hint') : t('show_hint')}</span>
             </button>
 
             {showHint && challenge.hintsKeys.length > 0 && (
               <div className="mt-3 p-4 rounded-xl bg-purple-950/30 border border-purple-800/40 text-xs font-mono text-purple-200 space-y-2">
                 <p className="text-purple-300 font-semibold">
-                  💡 Dica #{activeHintIndex + 1}:
+                  💡 {t('hint_label')} #{activeHintIndex + 1}:
                 </p>
                 <p>{t(challenge.hintsKeys[activeHintIndex])}</p>
                 {challenge.hintsKeys.length > 1 && (
@@ -126,7 +126,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                       }
                       className="px-2 py-1 rounded bg-purple-900/50 hover:bg-purple-800 text-[10px] text-purple-200"
                     >
-                      Próxima Dica
+                      {t('next_hint')}
                     </button>
                   </div>
                 )}
@@ -154,10 +154,10 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               <button
                 onClick={handleResetCode}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-all"
-                title="Resetar Código Inicial"
+                title={t('reset_code')}
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset</span>
+                <span>{t('reset_code')}</span>
               </button>
 
               <button
@@ -170,7 +170,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                 ) : (
                   <Play className="w-4 h-4 fill-current" />
                 )}
-                <span>Executar & Validar</span>
+                <span>{t('run_and_validate')}</span>
               </button>
             </div>
           </div>
@@ -200,15 +200,15 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               <div className="flex items-center gap-2">
                 <TerminalIcon className="w-4 h-4 text-blue-400" />
                 <span className="uppercase tracking-wider font-bold text-slate-300">
-                  [CONSOLE DE EXECUÇÃO TEMPORAL]
+                  {t('console_title')}
                 </span>
               </div>
-              <span>Tempo: {secondsElapsed}s</span>
+              <span>{t('time_elapsed_label')}: {secondsElapsed}s</span>
             </div>
 
             {!hasRun ? (
               <p className="text-slate-500 italic">
-                &gt; Clique em "Executar & Validar" para testar o código...
+                &gt; {t('console_placeholder')}
               </p>
             ) : (
               <div className="space-y-2">
@@ -233,7 +233,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                 {testResults.every((r) => r.passed) && (
                   <div className="pt-2 text-emerald-400 font-bold flex items-center gap-2 animate-bounce">
                     <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span>[SUCESSO] Código validado! Fenda temporal selada com êxito!</span>
+                    <span>{t('console_success')}</span>
                   </div>
                 )}
               </div>

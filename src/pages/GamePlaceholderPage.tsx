@@ -96,13 +96,13 @@ export const GamePlaceholderPage: React.FC = () => {
               <span>[CHRONOS LOG // INITIALIZATION]</span>
             </div>
             <p className="text-slate-400">
-              &gt; Sincronização temporal estabelecida com sucesso.
+              &gt; {t('log_sync_success')}
             </p>
             <p className="text-slate-400">
-              &gt; Módulo de jogo em carregamento ativo para a próxima etapa da jornada.
+              &gt; {t('log_module_loading')}
             </p>
             <p className="text-emerald-400">
-              &gt; Sistema pronto para recepção dos primeiros desafios de código.
+              &gt; {t('log_system_ready')}
             </p>
           </div>
 
