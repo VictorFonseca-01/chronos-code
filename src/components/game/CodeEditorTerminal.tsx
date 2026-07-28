@@ -10,7 +10,7 @@ interface CodeEditorTerminalProps {
   onSuccess: (code: string, timeSeconds: number) => void;
   selectedLanguage: SupportedLanguage;
   onLanguageChange: (lang: SupportedLanguage) => void;
-  onDroneMove?: (dronePos: { x: number; y: number }, isRepaired: boolean) => void;
+  onDroneMove?: (dronePos: { x: number; y: number } | ((prev: { x: number; y: number }) => { x: number; y: number })) => void;
   dronePos?: { x: number; y: number };
 }
 
@@ -93,29 +93,47 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     setIsRunning(true);
     setHasRun(true);
 
-    // Strip comments to validate actual executable code
     const cleanCode = stripComments(code).trim();
     const rawInitial = getTranslatedInitialCode(selectedLanguage);
     const cleanInitial = stripComments(rawInitial).trim();
 
-    // Verification fails if code is empty or unchanged from initial comments
     const isUnchanged = cleanCode === cleanInitial || cleanCode.length === 0;
+    const logs: string[] = [];
 
-    // Execute Sandbox for real stdout/stderr capture and drone state updates
-    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage, isFrontend, dronePos);
-    const logs = sandboxRes.logs || [];
-    if (sandboxRes.error) {
-      logs.push(`[EXEC ERROR] ${sandboxRes.error}`);
+    // Inject droneAPI as requested
+    const droneAPI = {
+      moveRight: () => {
+        if (onDroneMove) onDroneMove((prev) => ({ ...prev, x: Math.min(5, prev.x + 1) }));
+        logs.push(`[DRONE] drone.moveRight() executado`);
+      },
+      moveLeft: () => {
+        if (onDroneMove) onDroneMove((prev) => ({ ...prev, x: Math.max(0, prev.x - 1) }));
+        logs.push(`[DRONE] drone.moveLeft() executado`);
+      },
+      moveDown: () => {
+        if (onDroneMove) onDroneMove((prev) => ({ ...prev, y: Math.min(5, prev.y + 1) }));
+        logs.push(`[DRONE] drone.moveDown() executado`);
+      },
+      moveUp: () => {
+        if (onDroneMove) onDroneMove((prev) => ({ ...prev, y: Math.max(0, prev.y - 1) }));
+        logs.push(`[DRONE] drone.moveUp() executado`);
+      },
+    };
+
+    if (!isFrontend) {
+      try {
+        const execute = new Function('drone', code);
+        execute(droneAPI);
+      } catch (error: any) {
+        console.error("Erro na execução:", error);
+        logs.push(`[ERRO] ${error?.message || error}`);
+      }
+    } else {
+      const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage, isFrontend, dronePos);
+      logs.push(...(sandboxRes.logs || []));
     }
+
     setSandboxLogs(logs);
-
-    // Update real-time Drone State in React
-    if (sandboxRes.droneState && onDroneMove) {
-      onDroneMove(
-        { x: sandboxRes.droneState.x, y: sandboxRes.droneState.y },
-        sandboxRes.droneState.reparado
-      );
-    }
 
     const currentTestCases = getActiveTestCases();
 
@@ -133,7 +151,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
       if (allPassed) {
         onSuccess(code, secondsElapsed);
       }
-    }, 400);
+    }, 300);
   };
 
   const getFileExtension = () => {
