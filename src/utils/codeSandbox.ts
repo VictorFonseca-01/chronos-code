@@ -7,6 +7,15 @@ export interface SandboxResult {
 
 export type SupportedLanguage = 'javascript' | 'python';
 
+export const stripComments = (code: string): string => {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS / C / JS block comments /* ... */
+    .replace(/\/\/.*/g, '')          // Remove JS line comments // ...
+    .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments <!-- ... -->
+    .replace(/;.*/g, '')            // Remove Assembly comments ; ...
+    .replace(/#.*/g, '');           // Remove Python line comments # ...
+};
+
 export const runJavaScriptSandbox = (code: string): SandboxResult => {
   const logs: string[] = [];
   const originalLog = console.log;
@@ -58,7 +67,6 @@ export const executeSandboxCode = async (
   language: SupportedLanguage
 ): Promise<SandboxResult> => {
   if (language === 'python') {
-    // Python simulation runner / Pyodide hook point
     return {
       success: true,
       logs: [

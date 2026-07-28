@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, RotateCcw, HelpCircle, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles, Code2, Eye } from 'lucide-react';
 import { Challenge, TestCase } from '../../types/game';
-import { executeSandboxCode, SupportedLanguage, SandboxResult } from '../../utils/codeSandbox';
+import { executeSandboxCode, SupportedLanguage, SandboxResult, stripComments } from '../../utils/codeSandbox';
 import { LivePreviewCanvas } from './LivePreviewCanvas';
 
 interface CodeEditorTerminalProps {
@@ -78,6 +78,14 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     setIsRunning(true);
     setHasRun(true);
 
+    // Strip comments to validate actual executable code
+    const cleanCode = stripComments(code).trim();
+    const rawInitial = getTranslatedInitialCode(selectedLanguage);
+    const cleanInitial = stripComments(rawInitial).trim();
+
+    // Verification fails if code is empty or unchanged from initial comments
+    const isUnchanged = cleanCode === cleanInitial || cleanCode.length === 0;
+
     // Execute Sandbox for real stdout/stderr capture
     const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage);
     const logs = sandboxRes.logs || [];
@@ -89,7 +97,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     setTimeout(() => {
       const results: TestRunResult[] = challenge.testCases.map((tc: TestCase) => ({
         testId: tc.id,
-        passed: tc.testFn(code),
+        passed: !isUnchanged && tc.testFn(cleanCode),
         descriptionKey: tc.descriptionKey,
       }));
 

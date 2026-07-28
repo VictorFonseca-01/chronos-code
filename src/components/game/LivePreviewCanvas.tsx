@@ -9,10 +9,15 @@ interface LivePreviewCanvasProps {
 export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) => {
   const { t } = useTranslation();
 
-  // Enclose code with default dark theme preview wrapper if no html/body tag present
-  const formattedDoc = code.includes('<html')
-    ? code
-    : `
+  // Detect if code is CSS or HTML
+  const isHtml = /<[a-z][\s\S]*>/i.test(code);
+
+  let formattedDoc = '';
+
+  if (isHtml) {
+    formattedDoc = code.includes('<html')
+      ? code
+      : `
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,6 +39,40 @@ export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) =>
 </body>
 </html>
 `;
+  } else {
+    // Treat as CSS stylesheet and inject into demo HTML container
+    formattedDoc = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #030712;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    /* USER CSS CODE INJECTED HERE */
+    ${code}
+  </style>
+</head>
+<body>
+  <div class="temporal-container">
+    <div style="text-align: center; max-width: 500px; padding: 24px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; background: rgba(15,23,42,0.6);">
+      <h1 style="font-size: 24px; margin-bottom: 8px; font-weight: 800; color: #60a5fa;">Interface Chronos</h1>
+      <p style="font-size: 14px; color: #94a3b8; margin: 0;">Sintonização Visual CSS Temporal em Tempo Real</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+  }
 
   return (
     <div className="w-full flex flex-col rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-2xl min-h-[360px]">
@@ -61,7 +100,7 @@ export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) =>
           srcDoc={formattedDoc}
           title="Live Preview"
           sandbox="allow-scripts"
-          className="w-full h-full min-h-[320px] border-none bg-[#090d16]"
+          className="w-full h-full min-h-[320px] border-none bg-[#030712]"
         />
       </div>
     </div>
