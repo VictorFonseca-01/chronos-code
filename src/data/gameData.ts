@@ -15,66 +15,29 @@ export const ERAS_DATA: Era[] = [
         titleKey: 'challenge_be_01_title',
         descriptionKey: {
           javascript: 'challenge_be_01_desc_javascript',
-          python: 'challenge_be_01_desc_python',
-          java: 'challenge_be_01_desc_java',
+          python: 'challenge_be_01_desc_javascript',
+          java: 'challenge_be_01_desc_javascript',
         },
         contextKey: 'challenge_be_01_context',
         initialCodeKey: 'challenge_be_01_code',
-        initialCode: {
-          javascript: `// COMANDOS DO NANO-DRONE NA MATRIZ:
-// drone.moveRight(); (Mover para a Direita)
-// drone.moveDown();  (Mover para Baixo)
-// drone.repair();    (Reparar Nó de Energia)
-
-drone.moveRight();
-drone.moveRight();
-drone.moveDown();
-drone.moveDown();
-drone.repair();`,
-          python: `# COMANDOS DO NANO-DRONE NA MATRIZ:
-# drone.move_right()
-# drone.move_down()
-# drone.repair()
-
-drone.move_right()
-drone.move_right()
-drone.move_down()
-drone.move_down()
-drone.repair()`,
-          java: `// COMANDOS DO NANO-DRONE NA MATRIZ:
+        initialCode: `// Comandos disponíveis:
 // drone.moveRight();
 // drone.moveDown();
-// drone.repair();
 
 drone.moveRight();
-drone.moveRight();
-drone.moveDown();
-drone.moveDown();
-drone.repair();`,
-        },
-        hintsKeys: {
-          javascript: ['challenge_be_01_hint1_javascript', 'challenge_be_01_hint2'],
-          python: ['challenge_be_01_hint1_python', 'challenge_be_01_hint2'],
-          java: ['challenge_be_01_hint1_java', 'challenge_be_01_hint2'],
-        },
+`,
+        hintsKeys: ['challenge_be_01_hint1_javascript', 'challenge_be_01_hint2'],
         xpReward: 150,
-        testCases: {
-          javascript: [
-            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(moveRight|moverDireita)/i.test(code) },
-            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(moveDown|moverBaixo)/i.test(code) },
-            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
-          ],
-          python: [
-            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(move_right|mover_direita)/i.test(code) },
-            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(move_down|mover_baixo)/i.test(code) },
-            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
-          ],
-          java: [
-            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(moveRight|moverDireita)/i.test(code) },
-            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(moveDown|moverBaixo)/i.test(code) },
-            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
-          ],
-        },
+        testCases: [
+          {
+            id: 'check_drone_mover',
+            descriptionKey: 'test_be_01_tc1',
+            testFn: (code: string) => {
+              const matches = (code.match(/drone\.moveRight/g) || []).length;
+              return matches >= 2;
+            },
+          },
+        ],
       },
       {
         id: 'frontend_01',
@@ -138,54 +101,21 @@ export default function ChronosWebNode() {
         eraId: 'era_02',
         track: 'backend',
         titleKey: 'challenge_be_02_title',
-        descriptionKey: {
-          javascript: 'challenge_be_02_desc_javascript',
-          python: 'challenge_be_02_desc_python',
-          java: 'challenge_be_02_desc_java',
-        },
+        descriptionKey: 'challenge_be_02_desc_javascript',
         contextKey: 'challenge_be_02_context',
         initialCodeKey: 'challenge_be_02_code',
-        initialCode: {
-          javascript: `// SETOR 2: ALGORITMOS DE NANO-DRONES INN JAVASCRIPT
-// Missão: Envie o Nano-Drone para limpar 3 Glitch Nodes usando um loop 'for'.
+        initialCode: `// SETOR 2: ALGORITMOS DE NANO-DRONES
+// Missão: Envie o Nano-Drone para a direita usando drone.moveRight().
 
-for (let i = 0; i < 3; i++) {
-    drone.moveRight();
-}
-drone.repair();`,
-          python: `# SETOR 2: ALGORITMOS DE NANO-DRONES EM PYTHON
-# Missão: Envie o Nano-Drone para limpar 3 Glitch Nodes usando um loop 'for'.
-
-for i in range(3):
-    drone.move_right()
-drone.repair()`,
-          java: `// SETOR 2: ALGORITMOS DE NANO-DRONES EM JAVA
-public class DroneAutomation {
-    public static void execute() {
-        for (int i = 0; i < 3; i++) {
-            drone.moveRight();
-        }
-        drone.repair();
-    }
-}`,
-        },
-        hintsKeys: {
-          javascript: ['challenge_be_02_hint1_javascript'],
-          python: ['challenge_be_02_hint1_python'],
-          java: ['challenge_be_02_hint1_java'],
-        },
+drone.moveRight();
+drone.moveRight();
+drone.moveRight();
+`,
+        hintsKeys: ['challenge_be_02_hint1_javascript'],
         xpReward: 250,
-        testCases: {
-          javascript: [
-            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(moveRight|moverDireita)/i.test(code) },
-          ],
-          python: [
-            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(move_right|mover_direita)/i.test(code) },
-          ],
-          java: [
-            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(moveRight|moverDireita)/i.test(code) },
-          ],
-        },
+        testCases: [
+          { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(moveRight|moverDireita)/i.test(code) },
+        ],
       },
       {
         id: 'frontend_02',
