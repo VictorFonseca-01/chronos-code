@@ -28,6 +28,7 @@ export const GamePage: React.FC = () => {
   const [showVictoryModal, setShowVictoryModal] = useState<boolean>(false);
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const [lastVictoryTime, setLastVictoryTime] = useState<number>(0);
+  const [dronePos, setDronePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(
     trackParam === 'frontend' ? 'html' : 'javascript'
   );
@@ -42,6 +43,11 @@ export const GamePage: React.FC = () => {
     setCompletedChallenges(saved.completedChallenges || []);
     setSelectedLanguage(activeTrack === 'frontend' ? 'html' : 'javascript');
   }, [trackParam]);
+
+  // Reset drone position on challenge change
+  useEffect(() => {
+    setDronePos({ x: 0, y: 0 });
+  }, [currentChallengeIndex, currentEraId]);
 
   const currentEra = ERAS_DATA.find((e) => e.id === currentEraId) || ERAS_DATA[0];
   const eraChallenges = currentEra.challenges.filter((c) => c.track === track);
@@ -107,7 +113,7 @@ export const GamePage: React.FC = () => {
     <div className="h-screen w-screen overflow-hidden bg-slate-950 relative">
       {/* LAYER 0: Viewport Fullscreen Game World Background */}
       {track === 'backend' ? (
-        <MatrixGrid dronePos={{ x: 2, y: 2 }} gridSize={6} />
+        <MatrixGrid dronePos={dronePos} gridSize={6} />
       ) : (
         <LivePreviewCanvas code={activeChallenge ? stripComments(activeChallenge.initialCodeKey) : ''} isFullscreen={true} />
       )}
@@ -161,7 +167,7 @@ export const GamePage: React.FC = () => {
         </div>
       </div>
 
-      {/* LAYER 30: Floating Mission HUD (Top-Left) */}
+      {/* LAYER 30: Floating Mission HUD (Top-Left, below header & sectors) */}
       {activeChallenge && (
         <MissionHud
           challenge={activeChallenge}
@@ -177,6 +183,8 @@ export const GamePage: React.FC = () => {
           onSuccess={handleChallengeSuccess}
           selectedLanguage={selectedLanguage}
           onLanguageChange={(lang) => setSelectedLanguage(lang)}
+          dronePos={dronePos}
+          onDroneMove={(newPos) => setDronePos(newPos)}
         />
       )}
 

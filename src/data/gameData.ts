@@ -21,30 +21,36 @@ export const ERAS_DATA: Era[] = [
         contextKey: 'challenge_be_01_context',
         initialCodeKey: 'challenge_be_01_code',
         initialCode: {
-          javascript: `// ERA 1: CARTÃO PERFURADO & LOGICA EM JAVASCRIPT
-// Missão: Defina REG_A = 10, REG_B = 32 e exiba a soma de REG_A + REG_B
+          javascript: `// COMANDOS DO NANO-DRONE NA MATRIZ:
+// drone.moveRight(); (Mover para a Direita)
+// drone.moveDown();  (Mover para Baixo)
+// drone.repair();    (Reparar Nó de Energia)
 
-let REG_A = 0;
-let REG_B = 0;
+drone.moveRight();
+drone.moveRight();
+drone.moveDown();
+drone.moveDown();
+drone.repair();`,
+          python: `# COMANDOS DO NANO-DRONE NA MATRIZ:
+# drone.move_right()
+# drone.move_down()
+# drone.repair()
 
-console.log(REG_A + REG_B);`,
-          python: `# ERA 1: CARTÃO PERFURADO & LOGICA EM PYTHON
-# Missão: Defina REG_A = 10, REG_B = 32 e imprima a soma de REG_A + REG_B
+drone.move_right()
+drone.move_right()
+drone.move_down()
+drone.move_down()
+drone.repair()`,
+          java: `// COMANDOS DO NANO-DRONE NA MATRIZ:
+// drone.moveRight();
+// drone.moveDown();
+// drone.repair();
 
-REG_A = 0
-REG_B = 0
-
-print(REG_A + REG_B)`,
-          java: `// ERA 1: CARTÃO PERFURADO & LOGICA EM JAVA
-// Missão: Defina REG_A = 10, REG_B = 32 e exiba a soma com System.out.println
-
-public class Main {
-    public static void main(String[] args) {
-        int REG_A = 0;
-        int REG_B = 0;
-        System.out.println(REG_A + REG_B);
-    }
-}`,
+drone.moveRight();
+drone.moveRight();
+drone.moveDown();
+drone.moveDown();
+drone.repair();`,
         },
         hintsKeys: {
           javascript: ['challenge_be_01_hint1_javascript', 'challenge_be_01_hint2'],
@@ -54,19 +60,19 @@ public class Main {
         xpReward: 150,
         testCases: {
           javascript: [
-            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /REG_A\s*=\s*10/i.test(code) },
-            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /REG_B\s*=\s*32/i.test(code) },
-            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(REG_A\s*\+\s*REG_B|console\.log)/i.test(code) },
+            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(moveRight|moverDireita)/i.test(code) },
+            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(moveDown|moverBaixo)/i.test(code) },
+            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
           ],
           python: [
-            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /REG_A\s*=\s*10/i.test(code) },
-            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /REG_B\s*=\s*32/i.test(code) },
-            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(REG_A\s*\+\s*REG_B|print)/i.test(code) },
+            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(move_right|mover_direita)/i.test(code) },
+            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(move_down|mover_baixo)/i.test(code) },
+            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
           ],
           java: [
-            { id: 'check_reg_a', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(int\s+)?REG_A\s*=\s*10/i.test(code) },
-            { id: 'check_reg_b', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(int\s+)?REG_B\s*=\s*32/i.test(code) },
-            { id: 'check_add', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /System\.out\.println/i.test(code) },
+            { id: 'check_move_right', descriptionKey: 'test_be_01_tc1', testFn: (code: string) => /(moveRight|moverDireita)/i.test(code) },
+            { id: 'check_move_down', descriptionKey: 'test_be_01_tc2', testFn: (code: string) => /(moveDown|moverBaixo)/i.test(code) },
+            { id: 'check_repair', descriptionKey: 'test_be_01_tc3', testFn: (code: string) => /(repair|reparar)/i.test(code) },
           ],
         },
       },
@@ -82,7 +88,7 @@ public class Main {
         contextKey: 'challenge_fe_01_context',
         initialCodeKey: 'challenge_fe_01_code',
         initialCode: {
-          html: `<!-- ERA 1: O PRIMEIRO DOCUMENTO HYPERTEXTO (CERN 1991) -->
+          html: `<!-- SETOR 1: REINICIALIZAÇÃO DO VISOR HOLO -->
 <header>
   <!-- Adicione o titulo h1 com a mensagem: Chronos Web node -->
 </header>
@@ -91,7 +97,7 @@ public class Main {
   <p>Conexão estabelecida.</p>
   <!-- Adicione a tag <a> para "http://chronos.node" com o texto "Acessar Matriz" -->
 </main>`,
-          react: `// ERA 1: COMPONENTES EM REACT (JSX)
+          react: `// SETOR 1: COMPONENTES EM REACT (JSX)
 export default function ChronosWebNode() {
   return (
     <header>
@@ -140,24 +146,26 @@ export default function ChronosWebNode() {
         contextKey: 'challenge_be_02_context',
         initialCodeKey: 'challenge_be_02_code',
         initialCode: {
-          javascript: `// ERA 2: ALGORITMOS EM JAVASCRIPT
-// Missão: Complete a função calculando a multiplicação de 'cycles' por 'flux_multiplier'.
+          javascript: `// SETOR 2: ALGORITMOS DE NANO-DRONES INN JAVASCRIPT
+// Missão: Envie o Nano-Drone para limpar 3 Glitch Nodes usando um loop 'for'.
 
-function calcular_frequencia(cycles, flux_multiplier) {
-    // Retorne a multiplicação dos parâmetros abaixo
-    return 0;
-}`,
-          python: `# ERA 2: ALGORITMOS EM PYTHON
-# Missão: Complete a função calculando a multiplicação de 'cycles' por 'flux_multiplier'.
+for (let i = 0; i < 3; i++) {
+    drone.moveRight();
+}
+drone.repair();`,
+          python: `# SETOR 2: ALGORITMOS DE NANO-DRONES EM PYTHON
+# Missão: Envie o Nano-Drone para limpar 3 Glitch Nodes usando um loop 'for'.
 
-def calcular_frequencia(cycles, flux_multiplier):
-    # Retorne a multiplicação dos parâmetros abaixo
-    return 0`,
-          java: `// ERA 2: ALGORITMOS EM JAVA
-public class FrequencyCalculator {
-    public static int calcularFrequencia(int cycles, int fluxMultiplier) {
-        // Retorne a multiplicação de cycles por fluxMultiplier
-        return 0;
+for i in range(3):
+    drone.move_right()
+drone.repair()`,
+          java: `// SETOR 2: ALGORITMOS DE NANO-DRONES EM JAVA
+public class DroneAutomation {
+    public static void execute() {
+        for (int i = 0; i < 3; i++) {
+            drone.moveRight();
+        }
+        drone.repair();
     }
 }`,
         },
@@ -169,13 +177,13 @@ public class FrequencyCalculator {
         xpReward: 250,
         testCases: {
           javascript: [
-            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*flux_multiplier/i.test(code) },
+            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(moveRight|moverDireita)/i.test(code) },
           ],
           python: [
-            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*flux_multiplier/i.test(code) },
+            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(move_right|mover_direita)/i.test(code) },
           ],
           java: [
-            { id: 'check_return_product', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /return\s+cycles\s*\*\s*fluxMultiplier/i.test(code) },
+            { id: 'check_loop', descriptionKey: 'test_be_02_tc1', testFn: (code: string) => /(for|while)/i.test(code) && /(moveRight|moverDireita)/i.test(code) },
           ],
         },
       },
@@ -187,7 +195,7 @@ public class FrequencyCalculator {
         descriptionKey: 'challenge_fe_02_desc',
         contextKey: 'challenge_fe_02_context',
         initialCodeKey: 'challenge_fe_02_code',
-        initialCode: `/* ERA 2: FOLHAS DE ESTILO CSS */
+        initialCode: `/* SETOR 2: FOLHAS DE ESTILO CSS */
 .temporal-container {
   /* Defina background-color para #0f172a */
   

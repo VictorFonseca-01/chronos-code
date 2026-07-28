@@ -10,6 +10,8 @@ interface CodeEditorTerminalProps {
   onSuccess: (code: string, timeSeconds: number) => void;
   selectedLanguage: SupportedLanguage;
   onLanguageChange: (lang: SupportedLanguage) => void;
+  onDroneMove?: (dronePos: { x: number; y: number }, isRepaired: boolean) => void;
+  dronePos?: { x: number; y: number };
 }
 
 interface TestRunResult {
@@ -23,6 +25,8 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   onSuccess,
   selectedLanguage,
   onLanguageChange,
+  onDroneMove,
+  dronePos = { x: 0, y: 0 },
 }) => {
   const { t, i18n } = useTranslation();
   const isFrontend = challenge.track === 'frontend';
@@ -97,13 +101,21 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     // Verification fails if code is empty or unchanged from initial comments
     const isUnchanged = cleanCode === cleanInitial || cleanCode.length === 0;
 
-    // Execute Sandbox for real stdout/stderr capture
-    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage, isFrontend);
+    // Execute Sandbox for real stdout/stderr capture and drone state updates
+    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage, isFrontend, dronePos);
     const logs = sandboxRes.logs || [];
     if (sandboxRes.error) {
       logs.push(`[EXEC ERROR] ${sandboxRes.error}`);
     }
     setSandboxLogs(logs);
+
+    // Update real-time Drone State in React
+    if (sandboxRes.droneState && onDroneMove) {
+      onDroneMove(
+        { x: sandboxRes.droneState.x, y: sandboxRes.droneState.y },
+        sandboxRes.droneState.reparado
+      );
+    }
 
     const currentTestCases = getActiveTestCases();
 

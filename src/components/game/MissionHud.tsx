@@ -36,7 +36,7 @@ export const MissionHud: React.FC<MissionHudProps> = ({
   const activeHints = getActiveHints();
 
   return (
-    <div className="fixed top-20 left-6 max-w-md w-[calc(100vw-3rem)] sm:w-full backdrop-blur-xl bg-slate-950/85 p-5 border border-slate-800/90 rounded-2xl z-30 shadow-2xl space-y-3 transition-all duration-300">
+    <div className="fixed top-28 left-6 max-w-md w-[calc(100vw-3rem)] sm:w-full backdrop-blur-xl bg-slate-950/85 p-5 border border-slate-800/90 rounded-2xl z-30 shadow-2xl space-y-3 transition-all duration-300">
       {/* Header bar with minimize toggle */}
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
         <div className="flex items-center gap-2">
