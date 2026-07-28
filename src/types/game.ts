@@ -1,3 +1,5 @@
+import { SupportedLanguage } from '../utils/codeSandbox';
+
 export type TrackType = 'backend' | 'frontend';
 
 export type EraId = 'era_01' | 'era_02' | 'era_03' | 'era_04';
@@ -8,6 +10,8 @@ export interface TestCase {
   testFn: (code: string) => boolean;
 }
 
+export type MultiLanguageCodeMap = Record<SupportedLanguage, string>;
+
 export interface Challenge {
   id: string;
   eraId: EraId;
@@ -16,7 +20,7 @@ export interface Challenge {
   descriptionKey: string;
   contextKey: string;
   initialCodeKey: string;
-  initialCode: string;
+  initialCode: string | Partial<MultiLanguageCodeMap>;
   hintsKeys: string[];
   xpReward: number;
   testCases: TestCase[];

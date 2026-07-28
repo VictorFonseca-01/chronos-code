@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Play, RotateCcw, HelpCircle, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
+import { Play, RotateCcw, HelpCircle, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles, Code2, Eye } from 'lucide-react';
 import { Challenge, TestCase } from '../../types/game';
+import { executeSandboxCode, SupportedLanguage, SandboxResult } from '../../utils/codeSandbox';
+import { LivePreviewCanvas } from './LivePreviewCanvas';
 
 interface CodeEditorTerminalProps {
   challenge: Challenge;
@@ -19,15 +21,20 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   onSuccess,
 }) => {
   const { t, i18n } = useTranslation();
+  const isFrontend = challenge.track === 'frontend';
+
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('javascript');
 
   const getTranslatedInitialCode = () => {
-    return t(challenge.initialCodeKey) || challenge.initialCode;
+    return t(challenge.initialCodeKey) || (typeof challenge.initialCode === 'string' ? challenge.initialCode : challenge.initialCode.javascript || '');
   };
 
   const [code, setCode] = useState<string>(getTranslatedInitialCode());
   const [showHint, setShowHint] = useState<boolean>(false);
   const [activeHintIndex, setActiveHintIndex] = useState<number>(0);
   const [testResults, setTestResults] = useState<TestRunResult[]>([]);
+  const [sandboxLogs, setSandboxLogs] = useState<string[]>([]);
   const [hasRun, setHasRun] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
@@ -42,23 +49,34 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
 
   // Reset editor when challenge or language changes
   useEffect(() => {
-    setCode(t(challenge.initialCodeKey) || challenge.initialCode);
+    setCode(getTranslatedInitialCode());
     setTestResults([]);
+    setSandboxLogs([]);
     setHasRun(false);
     setShowHint(false);
     setActiveHintIndex(0);
     setSecondsElapsed(0);
-  }, [challenge.id, i18n.language, t]);
+    setActiveTab('editor');
+  }, [challenge.id, i18n.language]);
 
   const handleResetCode = () => {
-    setCode(t(challenge.initialCodeKey) || challenge.initialCode);
+    setCode(getTranslatedInitialCode());
     setTestResults([]);
+    setSandboxLogs([]);
     setHasRun(false);
   };
 
-  const handleRunCode = () => {
+  const handleRunCode = async () => {
     setIsRunning(true);
     setHasRun(true);
+
+    // Execute Sandbox for real stdout/stderr capture
+    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage);
+    const logs = sandboxRes.logs || [];
+    if (sandboxRes.error) {
+      logs.push(`[EXEC ERROR] ${sandboxRes.error}`);
+    }
+    setSandboxLogs(logs);
 
     setTimeout(() => {
       const results: TestRunResult[] = challenge.testCases.map((tc: TestCase) => ({
@@ -141,20 +159,66 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
         </div>
       </div>
 
-      {/* Right Column: Code Editor & Terminal (7 cols) */}
+      {/* Right Column: Code Editor, Tabs & Terminal (7 cols) */}
       <div className="lg:col-span-7 space-y-6">
+        {/* Editor Container */}
         <div className="rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-2xl">
-          {/* Editor Header Bar */}
-          <div className="bg-slate-900/90 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="ml-2 text-xs font-mono text-slate-400">
-                chronos_editor.{challenge.track === 'backend' ? 'asm' : 'html'}
-              </span>
+          {/* Editor Header Bar with Tabs / Language Dropdown */}
+          <div className="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+            {/* Left Header: File badge or Frontend Tabs / Language selector */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              </div>
+
+              {isFrontend ? (
+                /* Tabs: Editor vs Live Preview */
+                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 font-mono text-xs">
+                  <button
+                    onClick={() => setActiveTab('editor')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
+                      activeTab === 'editor'
+                        ? 'bg-blue-600/30 text-blue-300 font-bold border border-blue-500/40'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Code2 className="w-3.5 h-3.5" />
+                    <span>{t('tab_editor')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('preview')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
+                      activeTab === 'preview'
+                        ? 'bg-purple-600/30 text-purple-300 font-bold border border-purple-500/40'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>{t('tab_live_preview')}</span>
+                  </button>
+                </div>
+              ) : (
+                /* Language selector for Backend */
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono text-slate-400 font-bold uppercase">
+                    {t('language_label')}:
+                  </span>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="javascript">JavaScript ⚡</option>
+                    <option value="python">Python 🐍</option>
+                  </select>
+                </div>
+              )}
             </div>
 
+            {/* Right Header Controls */}
             <div className="flex items-center gap-2">
               <button
                 onClick={handleResetCode}
@@ -180,26 +244,30 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
             </div>
           </div>
 
-          {/* Interactive Textarea & Line Numbers */}
-          <div className="relative flex font-mono text-xs sm:text-sm bg-slate-950 min-h-[260px] p-4">
-            {/* Line numbers */}
-            <div className="select-none pr-4 text-slate-600 text-right font-mono border-r border-slate-900 leading-6">
-              {lines.map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
+          {/* Interactive Textarea OR Live Canvas */}
+          {activeTab === 'preview' && isFrontend ? (
+            <LivePreviewCanvas code={code} />
+          ) : (
+            <div className="relative flex font-mono text-xs sm:text-sm bg-slate-950 min-h-[260px] p-4">
+              {/* Line numbers */}
+              <div className="select-none pr-4 text-slate-600 text-right font-mono border-r border-slate-900 leading-6">
+                {lines.map((_, i) => (
+                  <div key={i}>{i + 1}</div>
+                ))}
+              </div>
+
+              {/* Editable code textarea */}
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="w-full pl-4 bg-transparent text-emerald-400 focus:outline-none font-mono resize-none leading-6 tracking-wide placeholder-slate-700"
+                rows={Math.max(10, lines.length)}
+                spellCheck={false}
+              />
             </div>
+          )}
 
-            {/* Editable code textarea */}
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full pl-4 bg-transparent text-emerald-400 focus:outline-none font-mono resize-none leading-6 tracking-wide placeholder-slate-700"
-              rows={Math.max(10, lines.length)}
-              spellCheck={false}
-            />
-          </div>
-
-          {/* Terminal Log Output */}
+          {/* Terminal Log Output & Sandbox Console */}
           <div className="border-t border-slate-800 bg-slate-900/60 p-4 font-mono text-xs space-y-3">
             <div className="flex items-center justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-2">
               <div className="flex items-center gap-2">
@@ -217,6 +285,19 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
               </p>
             ) : (
               <div className="space-y-2">
+                {/* Sandbox Real Execution Logs */}
+                {sandboxLogs.length > 0 && (
+                  <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] space-y-1 font-mono text-slate-300">
+                    <span className="text-blue-400 font-bold block">[SANDBOX OUTPUT]</span>
+                    {sandboxLogs.map((log, idx) => (
+                      <p key={idx} className="text-slate-400">
+                        &gt; {log}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Validation Test Case Results */}
                 {testResults.map((res) => (
                   <div
                     key={res.testId}

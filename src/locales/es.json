@@ -31,6 +31,12 @@
   "log_module_loading": "Módulo de juego en carga activa para la siguiente etapa del viaje.",
   "log_system_ready": "Sistema listo para recibir los primeros desafíos de código.",
 
+  "tab_editor": "Editor",
+  "tab_live_preview": "Live Preview",
+  "live_preview_title": "PROYECCIÓN DE INTERFAZ EN TIEMPO REAL",
+  "live_preview_active": "Live Canvas Activo",
+  "language_label": "Lenguaje",
+
   "ranking": "Clasificación",
   "era_label": "ERA",
   "hide_hint": "Ocultar Pista Temporal",

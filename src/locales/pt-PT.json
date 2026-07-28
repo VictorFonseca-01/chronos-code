@@ -31,6 +31,12 @@
   "log_module_loading": "Módulo de jogo em carregamento ativo para a próxima etapa da jornada.",
   "log_system_ready": "Sistema pronto para receção dos primeiros desafios de código.",
 
+  "tab_editor": "Editor",
+  "tab_live_preview": "Live Preview",
+  "live_preview_title": "PROJEÇÃO DE INTERFACE EM TEMPO REAL",
+  "live_preview_active": "Live Canvas Ativo",
+  "language_label": "Linguagem",
+
   "ranking": "Ranking",
   "era_label": "ERA",
   "hide_hint": "Ocultar Dica Temporal",

@@ -31,6 +31,12 @@
   "log_module_loading": "Game module active loading for the next step of the journey.",
   "log_system_ready": "System ready to receive initial coding challenges.",
 
+  "tab_editor": "Editor",
+  "tab_live_preview": "Live Preview",
+  "live_preview_title": "REAL-TIME INTERFACE CANVAS",
+  "live_preview_active": "Live Canvas Active",
+  "language_label": "Language",
+
   "ranking": "Leaderboard",
   "era_label": "ERA",
   "hide_hint": "Hide Temporal Hint",
