@@ -23,12 +23,13 @@ export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) =>
 <head>
   <meta charset="utf-8">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
     body {
       margin: 0;
-      padding: 20px;
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: #090d16;
-      color: #f1f5f9;
+      padding: 24px;
+      font-family: 'Fira Code', monospace, system-ui;
+      background-color: #030712;
+      color: #38bdf8;
       min-height: 100vh;
       box-sizing: border-box;
     }
@@ -40,33 +41,40 @@ export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) =>
 </html>
 `;
   } else {
-    // Treat as CSS stylesheet and inject into demo HTML container
+    // Cyberpunk Holographic HUD Base Template
     formattedDoc = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
     * {
       box-sizing: border-box;
     }
     body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Fira Code', monospace, system-ui;
       background-color: #030712;
-      color: #f8fafc;
+      color: #38bdf8;
       min-height: 100vh;
+      overflow: hidden;
     }
-    /* USER CSS CODE INJECTED HERE */
+    
+    /* PLAYER CSS STYLESHEET INJECTED HERE */
     ${code}
   </style>
 </head>
 <body>
   <div class="temporal-container">
-    <div style="text-align: center; max-width: 500px; padding: 24px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; background: rgba(15,23,42,0.6);">
-      <h1 style="font-size: 24px; margin-bottom: 8px; font-weight: 800; color: #60a5fa;">Interface Chronos</h1>
-      <p style="font-size: 14px; color: #94a3b8; margin: 0;">Sintonização Visual CSS Temporal em Tempo Real</p>
+    <div style="text-align: center; max-width: 540px; padding: 28px; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; background: rgba(15, 23, 42, 0.7); box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); backdrop-filter: blur(12px);">
+      <div style="display: flex; items-center; justify-content: space-between; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 12px; margin-bottom: 16px; font-size: 11px; text-transform: uppercase; tracking: wider; color: #a855f7;">
+        <span>[VISOR HOLOGRÁFICO HUD]</span>
+        <span>STATUS: NÚCLEO CHRONOS ONLINE</span>
+      </div>
+      <h1 style="font-size: 26px; margin-bottom: 10px; font-weight: 800; color: #38bdf8; text-shadow: 0 0 12px rgba(56,189,248,0.5);">MATRIZ TEMPORAL</h1>
+      <p style="font-size: 13px; color: #94a3b8; margin: 0; line-height: 1.6;">Projeção do HUD de Arquiteto Quântico em tempo real.</p>
     </div>
   </div>
 </body>
