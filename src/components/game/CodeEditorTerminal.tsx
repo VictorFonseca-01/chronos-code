@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Play, RotateCcw, HelpCircle, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles, Code2, Eye } from 'lucide-react';
+import { Play, RotateCcw, Terminal as TerminalIcon, CheckCircle2, XCircle, Sparkles, Code2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { Challenge, TestCase, MultiLanguageMap } from '../../types/game';
 import { executeSandboxCode, SupportedLanguage, SandboxResult, stripComments } from '../../utils/codeSandbox';
 import { LivePreviewCanvas } from './LivePreviewCanvas';
@@ -8,6 +8,8 @@ import { LivePreviewCanvas } from './LivePreviewCanvas';
 interface CodeEditorTerminalProps {
   challenge: Challenge;
   onSuccess: (code: string, timeSeconds: number) => void;
+  selectedLanguage: SupportedLanguage;
+  onLanguageChange: (lang: SupportedLanguage) => void;
 }
 
 interface TestRunResult {
@@ -19,28 +21,14 @@ interface TestRunResult {
 export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   challenge,
   onSuccess,
+  selectedLanguage,
+  onLanguageChange,
 }) => {
   const { t, i18n } = useTranslation();
   const isFrontend = challenge.track === 'frontend';
 
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(
-    isFrontend ? 'html' : 'javascript'
-  );
-
-  // Set default language when challenge changes
-  useEffect(() => {
-    setSelectedLanguage(isFrontend ? 'html' : 'javascript');
-  }, [challenge.id, isFrontend]);
-
-  // Dynamic language resolution helpers
-  const getTranslatedDescription = () => {
-    if (typeof challenge.descriptionKey === 'object' && challenge.descriptionKey[selectedLanguage]) {
-      const key = challenge.descriptionKey[selectedLanguage]!;
-      return t(key);
-    }
-    return t(challenge.descriptionKey as string);
-  };
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   const getTranslatedInitialCode = (lang: SupportedLanguage = selectedLanguage) => {
     const langKey = `${challenge.initialCodeKey}_${lang}`;
@@ -58,13 +46,6 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     return typeof challenge.initialCode === 'string' ? challenge.initialCode : '';
   };
 
-  const getActiveHints = (): string[] => {
-    if (typeof challenge.hintsKeys === 'object' && !Array.isArray(challenge.hintsKeys) && (challenge.hintsKeys as MultiLanguageMap<string[]>)[selectedLanguage]) {
-      return (challenge.hintsKeys as MultiLanguageMap<string[]>)[selectedLanguage]!;
-    }
-    return Array.isArray(challenge.hintsKeys) ? challenge.hintsKeys : [];
-  };
-
   const getActiveTestCases = (): TestCase[] => {
     if (typeof challenge.testCases === 'object' && !Array.isArray(challenge.testCases) && (challenge.testCases as MultiLanguageMap<TestCase[]>)[selectedLanguage]) {
       return (challenge.testCases as MultiLanguageMap<TestCase[]>)[selectedLanguage]!;
@@ -73,8 +54,6 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   };
 
   const [code, setCode] = useState<string>(getTranslatedInitialCode(selectedLanguage));
-  const [showHint, setShowHint] = useState<boolean>(false);
-  const [activeHintIndex, setActiveHintIndex] = useState<number>(0);
   const [testResults, setTestResults] = useState<TestRunResult[]>([]);
   const [sandboxLogs, setSandboxLogs] = useState<string[]>([]);
   const [hasRun, setHasRun] = useState<boolean>(false);
@@ -95,8 +74,6 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     setTestResults([]);
     setSandboxLogs([]);
     setHasRun(false);
-    setShowHint(false);
-    setActiveHintIndex(0);
     setSecondsElapsed(0);
     setActiveTab('editor');
   }, [challenge.id, selectedLanguage, i18n.language]);
@@ -158,146 +135,118 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     }
   };
 
-  const activeHints = getActiveHints();
   const lines = code.split('\n');
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      {/* Left Column: Mission Context & Hints (5 cols) */}
-      <div className="lg:col-span-5 space-y-6">
-        <div className="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4 shadow-xl relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-            <h2 className="text-xl font-bold text-white tracking-tight">
-              {t(challenge.titleKey)}
-            </h2>
-            <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold">
-              +{challenge.xpReward} XP
-            </span>
+    <div className="fixed bottom-6 right-6 w-[calc(100vw-3rem)] sm:w-full max-w-xl shadow-2xl backdrop-blur-2xl bg-slate-950/90 border border-slate-800 rounded-2xl z-40 overflow-hidden transition-all duration-300">
+      {/* Header Bar with Minimize/Expand Toggle */}
+      <div className="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+            <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+            <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
           </div>
 
-          <p className="text-slate-300 text-sm leading-relaxed font-light">
-            {getTranslatedDescription()}
-          </p>
+          <span className="ml-1 text-xs font-mono text-slate-400 font-bold">
+            chronos_editor.{getFileExtension()}
+          </span>
 
-          {/* Context box */}
-          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-mono text-slate-400 space-y-2">
-            <span className="text-blue-400 font-semibold block uppercase tracking-wider">
-              [CHRONO BRIEFING]
+          {/* Language Selector Dropdown */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono text-slate-400 font-bold uppercase">
+              {t('language_label')}:
             </span>
-            <p className="text-slate-300">
-              {t(challenge.contextKey as string)}
-            </p>
-          </div>
-
-          {/* Hints Accordion */}
-          <div className="pt-2">
-            <button
-              onClick={() => setShowHint(!showHint)}
-              className="flex items-center gap-2 text-xs font-mono text-purple-400 hover:text-purple-300 transition-colors"
+            <select
+              value={selectedLanguage}
+              onChange={(e) => onLanguageChange(e.target.value as SupportedLanguage)}
+              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
-              <HelpCircle className="w-4 h-4" />
-              <span>{showHint ? t('hide_hint') : t('show_hint')}</span>
-            </button>
-
-            {showHint && activeHints.length > 0 && (
-              <div className="mt-3 p-4 rounded-xl bg-purple-950/30 border border-purple-800/40 text-xs font-mono text-purple-200 space-y-2">
-                <p className="text-purple-300 font-semibold">
-                  💡 {t('hint_label')} #{activeHintIndex + 1}:
-                </p>
-                <p>{t(activeHints[activeHintIndex])}</p>
-                {activeHints.length > 1 && (
-                  <div className="flex justify-end gap-2 pt-2">
-                    <button
-                      onClick={() =>
-                        setActiveHintIndex((prev) => (prev + 1) % activeHints.length)
-                      }
-                      className="px-2 py-1 rounded bg-purple-900/50 hover:bg-purple-800 text-[10px] text-purple-200"
-                    >
-                      {t('next_hint')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+              {isFrontend ? (
+                <>
+                  <option value="html">HTML 🌐</option>
+                  <option value="react">React (JSX) ⚛️</option>
+                </>
+              ) : (
+                <>
+                  <option value="javascript">JavaScript ⚡</option>
+                  <option value="python">Python 🐍</option>
+                  <option value="java">Java ☕</option>
+                </>
+              )}
+            </select>
           </div>
+        </div>
+
+        {/* Right Header Controls */}
+        <div className="flex items-center gap-2">
+          {isFrontend && !isMinimized && (
+            <div className="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 font-mono text-[11px]">
+              <button
+                onClick={() => setActiveTab('editor')}
+                className={`flex items-center gap-1 px-2.5 py-0.5 rounded-lg transition-all ${
+                  activeTab === 'editor'
+                    ? 'bg-blue-600/30 text-blue-300 font-bold border border-blue-500/40'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Code2 className="w-3 h-3" />
+                <span>{t('tab_editor')}</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('preview')}
+                className={`flex items-center gap-1 px-2.5 py-0.5 rounded-lg transition-all ${
+                  activeTab === 'preview'
+                    ? 'bg-purple-600/30 text-purple-300 font-bold border border-purple-500/40'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Eye className="w-3 h-3" />
+                <span>{t('tab_live_preview')}</span>
+              </button>
+            </div>
+          )}
+
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-all"
+            title={isMinimized ? "Expandir Editor" : "Minimizar Editor"}
+          >
+            {isMinimized ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 
-      {/* Right Column: Code Editor, Tabs & Terminal (7 cols) */}
-      <div className="lg:col-span-7 space-y-6">
-        {/* Editor Container */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-2xl">
-          {/* Editor Header Bar with Tabs / Language Dropdown */}
-          <div className="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
-            {/* Left Header: File badge or Frontend Tabs / Language selector */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+      {/* Expanded Editor Body */}
+      {!isMinimized && (
+        <div className="flex flex-col">
+          {/* Interactive Textarea OR Live Canvas */}
+          {activeTab === 'preview' && isFrontend ? (
+            <LivePreviewCanvas code={code} />
+          ) : (
+            <div className="relative flex font-mono text-xs bg-slate-950 min-h-[220px] max-h-[300px] overflow-auto p-3">
+              {/* Line numbers */}
+              <div className="select-none pr-3 text-slate-600 text-right font-mono border-r border-slate-900 leading-6">
+                {lines.map((_, i) => (
+                  <div key={i}>{i + 1}</div>
+                ))}
               </div>
 
-              <span className="ml-1 text-xs font-mono text-slate-400 font-bold">
-                chronos_editor.{getFileExtension()}
-              </span>
-
-              {/* Language Selector Dropdown */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-slate-400 font-bold uppercase">
-                  {t('language_label')}:
-                </span>
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
-                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
-                >
-                  {isFrontend ? (
-                    <>
-                      <option value="html">HTML 🌐</option>
-                      <option value="react">React (JSX) ⚛️</option>
-                    </>
-                  ) : (
-                    <>
-                      <option value="javascript">JavaScript ⚡</option>
-                      <option value="python">Python 🐍</option>
-                      <option value="java">Java ☕</option>
-                    </>
-                  )}
-                </select>
-              </div>
-
-              {isFrontend && (
-                /* Tabs: Editor vs Live Preview */
-                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 font-mono text-xs ml-auto sm:ml-0">
-                  <button
-                    onClick={() => setActiveTab('editor')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
-                      activeTab === 'editor'
-                        ? 'bg-blue-600/30 text-blue-300 font-bold border border-blue-500/40'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <Code2 className="w-3.5 h-3.5" />
-                    <span>{t('tab_editor')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('preview')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
-                      activeTab === 'preview'
-                        ? 'bg-purple-600/30 text-purple-300 font-bold border border-purple-500/40'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>{t('tab_live_preview')}</span>
-                  </button>
-                </div>
-              )}
+              {/* Editable code textarea */}
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="w-full pl-3 bg-transparent text-emerald-400 focus:outline-none font-mono resize-none leading-6 tracking-wide placeholder-slate-700"
+                rows={Math.max(8, lines.length)}
+                spellCheck={false}
+              />
             </div>
+          )}
 
-            {/* Right Header Controls */}
-            <div className="flex items-center gap-2">
+          {/* Action Button & Console */}
+          <div className="border-t border-slate-800 bg-slate-900/60 p-3 font-mono text-xs space-y-3">
+            <div className="flex items-center justify-between">
               <button
                 onClick={handleResetCode}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-all"
@@ -320,36 +269,10 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                 <span>{t('run_and_validate')}</span>
               </button>
             </div>
-          </div>
 
-          {/* Interactive Textarea OR Live Canvas */}
-          {activeTab === 'preview' && isFrontend ? (
-            <LivePreviewCanvas code={code} />
-          ) : (
-            <div className="relative flex font-mono text-xs sm:text-sm bg-slate-950 min-h-[260px] p-4">
-              {/* Line numbers */}
-              <div className="select-none pr-4 text-slate-600 text-right font-mono border-r border-slate-900 leading-6">
-                {lines.map((_, i) => (
-                  <div key={i}>{i + 1}</div>
-                ))}
-              </div>
-
-              {/* Editable code textarea */}
-              <textarea
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full pl-4 bg-transparent text-emerald-400 focus:outline-none font-mono resize-none leading-6 tracking-wide placeholder-slate-700"
-                rows={Math.max(10, lines.length)}
-                spellCheck={false}
-              />
-            </div>
-          )}
-
-          {/* Terminal Log Output & Sandbox Console */}
-          <div className="border-t border-slate-800 bg-slate-900/60 p-4 font-mono text-xs space-y-3">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-2">
+            <div className="flex items-center justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-1.5">
               <div className="flex items-center gap-2">
-                <TerminalIcon className="w-4 h-4 text-blue-400" />
+                <TerminalIcon className="w-3.5 h-3.5 text-blue-400" />
                 <span className="uppercase tracking-wider font-bold text-slate-300">
                   {t('console_title')}
                 </span>
@@ -358,14 +281,14 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
             </div>
 
             {!hasRun ? (
-              <p className="text-slate-500 italic">
+              <p className="text-slate-500 italic text-[11px]">
                 &gt; {t('console_placeholder')}
               </p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5 max-h-36 overflow-auto">
                 {/* Sandbox Real Execution Logs */}
                 {sandboxLogs.length > 0 && (
-                  <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] space-y-1 font-mono text-slate-300">
+                  <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] space-y-0.5 font-mono text-slate-300">
                     <span className="text-blue-400 font-bold block">[SANDBOX OUTPUT]</span>
                     {sandboxLogs.map((log, idx) => (
                       <p key={idx} className="text-slate-400">
@@ -379,24 +302,24 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
                 {testResults.map((res) => (
                   <div
                     key={res.testId}
-                    className={`flex items-center gap-2 p-2 rounded-lg border ${
+                    className={`flex items-center gap-2 p-1.5 rounded-lg border text-[11px] ${
                       res.passed
                         ? 'bg-emerald-950/30 border-emerald-800/40 text-emerald-300'
                         : 'bg-rose-950/30 border-rose-800/40 text-rose-300'
                     }`}
                   >
                     {res.passed ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                      <XCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                     )}
                     <span>{t(res.descriptionKey)}</span>
                   </div>
                 ))}
 
                 {testResults.every((r) => r.passed) && (
-                  <div className="pt-2 text-emerald-400 font-bold flex items-center gap-2 animate-bounce">
-                    <Sparkles className="w-4 h-4 text-amber-400" />
+                  <div className="pt-1 text-emerald-400 font-bold text-[11px] flex items-center gap-2 animate-bounce">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                     <span>{t('console_success')}</span>
                   </div>
                 )}
@@ -404,7 +327,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
             )}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -4,9 +4,13 @@ import { Eye } from 'lucide-react';
 
 interface LivePreviewCanvasProps {
   code: string;
+  isFullscreen?: boolean;
 }
 
-export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) => {
+export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({
+  code,
+  isFullscreen = false,
+}) => {
   const { t } = useTranslation();
 
   // Detect if code is CSS or HTML
@@ -68,18 +72,31 @@ export const LivePreviewCanvas: React.FC<LivePreviewCanvasProps> = ({ code }) =>
 </head>
 <body>
   <div class="temporal-container">
-    <div style="text-align: center; max-width: 540px; padding: 28px; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; background: rgba(15, 23, 42, 0.7); box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); backdrop-filter: blur(12px);">
+    <div style="text-align: center; max-width: 580px; padding: 32px; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 20px; background: rgba(15, 23, 42, 0.75); box-shadow: 0 0 40px rgba(56, 189, 248, 0.2); backdrop-filter: blur(12px);">
       <div style="display: flex; items-center; justify-content: space-between; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 12px; margin-bottom: 16px; font-size: 11px; text-transform: uppercase; tracking: wider; color: #a855f7;">
         <span>[VISOR HOLOGRÁFICO HUD]</span>
         <span>STATUS: NÚCLEO CHRONOS ONLINE</span>
       </div>
-      <h1 style="font-size: 26px; margin-bottom: 10px; font-weight: 800; color: #38bdf8; text-shadow: 0 0 12px rgba(56,189,248,0.5);">MATRIZ TEMPORAL</h1>
-      <p style="font-size: 13px; color: #94a3b8; margin: 0; line-height: 1.6;">Projeção do HUD de Arquiteto Quântico em tempo real.</p>
+      <h1 style="font-size: 28px; margin-bottom: 12px; font-weight: 800; color: #38bdf8; text-shadow: 0 0 16px rgba(56,189,248,0.6);">MATRIZ TEMPORAL</h1>
+      <p style="font-size: 14px; color: #94a3b8; margin: 0; line-height: 1.6;">Projeção do HUD de Arquiteto Quântico em tempo real.</p>
     </div>
   </div>
 </body>
 </html>
 `;
+  }
+
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 w-screen h-screen z-0 overflow-hidden bg-[#030712]">
+        <iframe
+          srcDoc={formattedDoc}
+          title="Live Preview Fullscreen"
+          sandbox="allow-scripts"
+          className="w-full h-full border-none bg-[#030712]"
+        />
+      </div>
+    );
   }
 
   return (
