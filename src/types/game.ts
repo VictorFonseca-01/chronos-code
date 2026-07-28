@@ -15,6 +15,7 @@ export interface Challenge {
   titleKey: string;
   descriptionKey: string;
   contextKey: string;
+  initialCodeKey: string;
   initialCode: string;
   hintsKeys: string[];
   xpReward: number;

@@ -69,6 +69,7 @@
   "challenge_be_01_context": "La computadora ENIAC requiere calibrar sus registros para estabilizar la grieta temporal.",
   "challenge_be_01_hint1": "Usa 'MOV REG_A, 10' y 'MOV REG_B, 32'.",
   "challenge_be_01_hint2": "Asegúrate de mantener la instrucción 'ADD REG_A, REG_B'.",
+  "challenge_be_01_code": "; ERA 1: TARJETA PERFORADA Y ENSAMBLADOR PRIMITIVO\n; Misión: Calibra el registro temporal limpiando la memoria y sumando el valor de pulso (VAL = 42).\n; Instrucción: Establece REG_A en 10, REG_B en 32 y ejecuta la instrucción ADD.\n\nMOV REG_A, 0\nMOV REG_B, 0\nADD REG_A, REG_B\nOUT REG_A",
   "test_be_01_tc1": "Instrucción MOV REG_A, 10 válida",
   "test_be_01_tc2": "Instrucción MOV REG_B, 32 válida",
   "test_be_01_tc3": "Instrucción ADD REG_A, REG_B ejecutada",
@@ -78,6 +79,7 @@
   "challenge_fe_01_context": "Tim Berners-Lee envió el primer hipertexto para conectar la red temporal.",
   "challenge_fe_01_hint1": "Agrega <h1>Chronos Web node</h1> dentro de la etiqueta <header>.",
   "challenge_fe_01_hint2": "Inserta la etiqueta <a href='http://chronos.node'>Acessar Matriz</a> en el <main>.",
+  "challenge_fe_01_code": "<!-- ERA 1: EL PRIMER DOCUMENTO HIPERTEXTO (CERN 1991) -->\n<!-- Misión: Crea el encabezado principal de la red temporal y conecta el enlace al Nodo Chronos -->\n\n<header>\n  <!-- Agrega el título h1 con el mensaje: Chronos Web node -->\n  \n</header>\n\n<main>\n  <p>Conexión con el nodo inicial establecida.</p>\n  <!-- Agrega la etiqueta <a> para \"http://chronos.node\" con el texto \"Acessar Matriz\" -->\n  \n</main>",
   "test_fe_01_tc1": "Título <h1>Chronos Web node</h1> presente",
   "test_fe_01_tc2": "Enlace <a> hacia http://chronos.node configurado",
 
@@ -85,12 +87,14 @@
   "challenge_be_02_desc": "Completa la función calculando la multiplicación de 'cycles' por 'flux_multiplier'.",
   "challenge_be_02_context": "El procesador de los años 80 requiere el cálculo de frecuencia de reloj exacta.",
   "challenge_be_02_hint1": "Reemplaza 'return 0;' por 'return cycles * flux_multiplier;'.",
+  "challenge_be_02_code": "// ERA 2: ALGORITMOS EN C Y ESTRUCTURAS DE DATOS\n// Misión: Completa la función de cálculo de frecuencia temporal.\n// Retorna la multiplicación de 'cycles' por 'flux_multiplier'.\n\nint calcular_frequencia(int cycles, int flux_multiplier) {\n    // Cambia la línea de abajo para retornar el producto correcto\n    return 0;\n}",
   "test_be_02_tc1": "Retorno del producto de cycles por flux_multiplier correcto",
 
   "challenge_fe_02_title": "Estilo Temporal en CSS",
   "challenge_fe_02_desc": "Define background-color en #0f172a, display flex y justify-content center.",
   "challenge_fe_02_context": "Sintoniza las señales visuales de la terminal de los 90.",
   "challenge_fe_02_hint1": "Inserta background-color: #0f172a; display: flex; y justify-content: center; en .temporal-container.",
+  "challenge_fe_02_code": "/* ERA 2: HOJAS DE ESTILO CSS PRIMITIVAS */\n/* Misión: Aplica el color de fondo cibernético #0f172a y centra el contenedor temporal con CSS */\n\n.temporal-container {\n  /* Establece background-color en #0f172a */\n  \n  /* Establece display en flex */\n  \n  /* Establece justify-content en center */\n  \n}",
   "test_fe_02_tc1": "Atributo background-color #0f172a configurado",
   "test_fe_02_tc2": "Propiedades flexbox de centralización configuradas"
 }

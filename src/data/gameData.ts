@@ -15,10 +15,8 @@ export const ERAS_DATA: Era[] = [
         titleKey: 'challenge_be_01_title',
         descriptionKey: 'challenge_be_01_desc',
         contextKey: 'challenge_be_01_context',
+        initialCodeKey: 'challenge_be_01_code',
         initialCode: `; ERA 1: CARTÃO PERFURADO & ASSEMBLY PRIMITIVO
-; Missão: Calibre o registrador temporal limpando a memória e somando o valor de pulso (VAL = 42).
-; Instrução: Defina REG_A com 10, REG_B com 32 e execute a instrução ADD.
-
 MOV REG_A, 0
 MOV REG_B, 0
 ADD REG_A, REG_B
@@ -50,18 +48,12 @@ OUT REG_A`,
         titleKey: 'challenge_fe_01_title',
         descriptionKey: 'challenge_fe_01_desc',
         contextKey: 'challenge_fe_01_context',
-        initialCode: `<!-- ERA 1: O PRIMEIRO DOCUMENTO HYPERTEXTO (CERN 1991) -->
-<!-- Missão: Crie o cabeçalho principal da rede temporal e conecte o link para o Nó Chronos -->
-
+        initialCodeKey: 'challenge_fe_01_code',
+        initialCode: `<!-- ERA 1: O PRIMEIRO DOCUMENTO HYPERTEXTO -->
 <header>
-  <!-- Adicione o titulo h1 com a mensagem: Chronos Web node -->
-  
 </header>
-
 <main>
-  <p>Conexão com o nó inicial estabelecida.</p>
-  <!-- Adicione a tag <a> para "http://chronos.node" com o texto "Acessar Matriz" -->
-  
+  <p>Conexão estabelecida.</p>
 </main>`,
         hintsKeys: ['challenge_fe_01_hint1', 'challenge_fe_01_hint2'],
         xpReward: 150,
@@ -94,12 +86,9 @@ OUT REG_A`,
         titleKey: 'challenge_be_02_title',
         descriptionKey: 'challenge_be_02_desc',
         contextKey: 'challenge_be_02_context',
-        initialCode: `// ERA 2: ALGORITMOS EM C & ESTRUTURAS DE DADOS
-// Missão: Complete a função de cálculo de frequência temporal.
-// Retorne a multiplicação de 'cycles' por 'flux_multiplier'.
-
+        initialCodeKey: 'challenge_be_02_code',
+        initialCode: `// ERA 2: ALGORITMOS EM C
 int calcular_frequencia(int cycles, int flux_multiplier) {
-    // Altere a linha abaixo para retornar o produto correto
     return 0;
 }`,
         hintsKeys: ['challenge_be_02_hint1'],
@@ -119,16 +108,9 @@ int calcular_frequencia(int cycles, int flux_multiplier) {
         titleKey: 'challenge_fe_02_title',
         descriptionKey: 'challenge_fe_02_desc',
         contextKey: 'challenge_fe_02_context',
-        initialCode: `/* ERA 2: FOLHAS DE ESTILO CSS PRIMITIVAS */
-/* Missão: Aplique cor de fundo cibernética #0f172a e centralize o contêiner temporal com CSS */
-
+        initialCodeKey: 'challenge_fe_02_code',
+        initialCode: `/* ERA 2: FOLHAS DE ESTILO CSS */
 .temporal-container {
-  /* Defina background-color para #0f172a */
-  
-  /* Defina display para flex */
-  
-  /* Defina justify-content para center */
-  
 }`,
         hintsKeys: ['challenge_fe_02_hint1'],
         xpReward: 250,

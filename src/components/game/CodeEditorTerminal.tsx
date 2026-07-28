@@ -18,8 +18,13 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
   challenge,
   onSuccess,
 }) => {
-  const { t } = useTranslation();
-  const [code, setCode] = useState<string>(challenge.initialCode);
+  const { t, i18n } = useTranslation();
+
+  const getTranslatedInitialCode = () => {
+    return t(challenge.initialCodeKey) || challenge.initialCode;
+  };
+
+  const [code, setCode] = useState<string>(getTranslatedInitialCode());
   const [showHint, setShowHint] = useState<boolean>(false);
   const [activeHintIndex, setActiveHintIndex] = useState<number>(0);
   const [testResults, setTestResults] = useState<TestRunResult[]>([]);
@@ -35,18 +40,18 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Reset editor when challenge changes
+  // Reset editor when challenge or language changes
   useEffect(() => {
-    setCode(challenge.initialCode);
+    setCode(t(challenge.initialCodeKey) || challenge.initialCode);
     setTestResults([]);
     setHasRun(false);
     setShowHint(false);
     setActiveHintIndex(0);
     setSecondsElapsed(0);
-  }, [challenge.id]);
+  }, [challenge.id, i18n.language, t]);
 
   const handleResetCode = () => {
-    setCode(challenge.initialCode);
+    setCode(t(challenge.initialCodeKey) || challenge.initialCode);
     setTestResults([]);
     setHasRun(false);
   };

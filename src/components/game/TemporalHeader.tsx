@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Cpu, Layout, Trophy, Zap, Shield, Globe } from 'lucide-react';
 import { TrackType, EraId } from '../../types/game';
-import { LanguageSelector } from '../LanguageSelector';
 
 interface TemporalHeaderProps {
   track: TrackType;
@@ -87,8 +86,6 @@ export const TemporalHeader: React.FC<TemporalHeaderProps> = ({
             </div>
             <span className="text-slate-400 text-[10px] sm:text-xs">{progressPercent}%</span>
           </div>
-
-          <LanguageSelector />
         </div>
       </div>
     </header>
