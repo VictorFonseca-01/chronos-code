@@ -23,5 +23,40 @@
   "status_ready": "Pronto para Sincronização",
   "back_to_home": "Voltar ao QG Temporal",
   "temporal_coordinates": "Coordenadas Temporais",
-  "chronos_core_online": "Núcleo Chronos: Online"
+  "chronos_core_online": "Núcleo Chronos: Online",
+
+  "era_01_title": "Era 01: Cartões Perfurados & HTML 1.0",
+  "era_01_desc": "A alvorada da programação moderna.",
+  "era_02_title": "Era 02: Algoritmos C & CSS Primitivo",
+  "era_02_desc": "A revolução da web estruturada.",
+
+  "challenge_be_01_title": "Calibração de Registrador CPU",
+  "challenge_be_01_desc": "Defina os valores de REG_A como 10 e REG_B como 32 no Assembly primitivo e execute a instrução ADD.",
+  "challenge_be_01_context": "O computador ENIAC precisa ter seus registradores calibrados para estabilizar a fenda temporal.",
+  "challenge_be_01_hint1": "Use 'MOV REG_A, 10' e 'MOV REG_B, 32'.",
+  "challenge_be_01_hint2": "Certifique-se de manter a instrução 'ADD REG_A, REG_B'.",
+  "test_be_01_tc1": "Instrução MOV REG_A, 10 válida",
+  "test_be_01_tc2": "Instrução MOV REG_B, 32 válida",
+  "test_be_01_tc3": "Instrução ADD REG_A, REG_B executada",
+
+  "challenge_fe_01_title": "O Primeiro Nó CERN 1991",
+  "challenge_fe_01_desc": "Crie o título h1 com 'Chronos Web node' dentro do <header> e a tag <a> para 'http://chronos.node' com o texto 'Acessar Matriz'.",
+  "challenge_fe_01_context": "Tim Berners-Lee enviou o primeiro hipertexto para conectar a rede temporal.",
+  "challenge_fe_01_hint1": "Adicione <h1>Chronos Web node</h1> dentro da tag <header>.",
+  "challenge_fe_01_hint2": "Insira a tag <a href='http://chronos.node'>Acessar Matriz</a> no <main>.",
+  "test_fe_01_tc1": "Título <h1>Chronos Web node</h1> presente",
+  "test_fe_01_tc2": "Link <a> para http://chronos.node configurado",
+
+  "challenge_be_02_title": "Cálculo de Frequência em C",
+  "challenge_be_02_desc": "Complete a função calculando a multiplicação de 'cycles' por 'flux_multiplier'.",
+  "challenge_be_02_context": "O processador dos anos 80 requer o cálculo da frequência de clock exata.",
+  "challenge_be_02_hint1": "Substitua 'return 0;' por 'return cycles * flux_multiplier;'.",
+  "test_be_02_tc1": "Retorno do produto de cycles por flux_multiplier correto",
+
+  "challenge_fe_02_title": "Estilização Temporal em CSS",
+  "challenge_fe_02_desc": "Defina background-color para #0f172a, display flex e justify-content center.",
+  "challenge_fe_02_context": "Sintonize os sinalizadores visuais do terminal dos anos 90.",
+  "challenge_fe_02_hint1": "Insira background-color: #0f172a; display: flex; e justify-content: center; na classe .temporal-container.",
+  "test_fe_02_tc1": "Atributo background-color #0f172a configurado",
+  "test_fe_02_tc2": "Propriedades flexbox de centralização configuradas"
 }
