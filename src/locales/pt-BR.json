@@ -99,7 +99,7 @@
   "challenge_fe_02_title": "Estilização Temporal em CSS",
   "challenge_fe_02_desc": "Defina background-color para #0f172a, display flex e justify-content center.",
   "challenge_fe_02_context": "Sintonize os sinalizadores visuais do terminal dos anos 90.",
-  "challenge_fe_02_hint1": "Insira background-color: #0f172a; display: flex; e justify-content: center; na classe .temporal-container.",
+  "challenge_fe_02_hint1": "Insira background-color: #0f172a; display: flex; justify-content: center; na classe .temporal-container.",
   "challenge_fe_02_code": "/* ERA 2: FOLHAS DE ESTILO CSS PRIMITIVAS */\n/* Missão: Aplique cor de fundo cibernética #0f172a e centralize o contêiner temporal com CSS */\n\n.temporal-container {\n  /* Defina background-color para #0f172a */\n  \n  /* Defina display para flex */\n  \n  /* Defina justify-content para center */\n  \n}",
   "test_fe_02_tc1": "Atributo background-color #0f172a configurado",
   "test_fe_02_tc2": "Propriedades flexbox de centralização configuradas"

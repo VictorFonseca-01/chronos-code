@@ -87,7 +87,7 @@ export const CodeEditorTerminal: React.FC<CodeEditorTerminalProps> = ({
     const isUnchanged = cleanCode === cleanInitial || cleanCode.length === 0;
 
     // Execute Sandbox for real stdout/stderr capture
-    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage);
+    const sandboxRes: SandboxResult = await executeSandboxCode(code, selectedLanguage, isFrontend);
     const logs = sandboxRes.logs || [];
     if (sandboxRes.error) {
       logs.push(`[EXEC ERROR] ${sandboxRes.error}`);

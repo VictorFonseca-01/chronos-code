@@ -5,11 +5,12 @@ export interface SandboxResult {
   error?: string;
 }
 
-export type SupportedLanguage = 'javascript' | 'python';
+export type SupportedLanguage = 'javascript' | 'python' | 'html' | 'css';
 
 export const stripComments = (code: string): string => {
   return code
     .replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS / C / JS block comments /* ... */
+    .replace(/.*?\*\//g, '')         // Remove orphaned comment closing tags like "text */"
     .replace(/\/\/.*/g, '')          // Remove JS line comments // ...
     .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments <!-- ... -->
     .replace(/;.*/g, '')            // Remove Assembly comments ; ...
@@ -64,8 +65,19 @@ export const runJavaScriptSandbox = (code: string): SandboxResult => {
 
 export const executeSandboxCode = async (
   code: string,
-  language: SupportedLanguage
+  language: SupportedLanguage,
+  isFrontendTrack: boolean = false
 ): Promise<SandboxResult> => {
+  if (isFrontendTrack) {
+    return {
+      success: true,
+      logs: [
+        '[DOM PREVIEW ENGINE] Documento HTML/CSS compilado para o Live Canvas com sucesso.',
+      ],
+      result: 'DOM Ready',
+    };
+  }
+
   if (language === 'python') {
     return {
       success: true,
